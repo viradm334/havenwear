@@ -1,0 +1,127 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(uuid())
+  name String
+  email String
+  password String
+  role Role
+  address String? @db.LongText
+  complaints Complaint[]
+  messages Message[]
+  cart Cart?
+  orders Order[]
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+}
+
+model Category {
+  id String @id @default(uuid())
+  name String
+  products Product[]
+}
+
+model Product {
+  id String @id @default(uuid())
+  name String
+  price Float
+  stock Int @default(0)
+  category Category @relation(fields: [categoryId], references: [id])
+  categoryId String
+  description String? @db.LongText
+  imageUrl String? @db.LongText
+  complaints Complaint[]
+  cartItems CartItem[]
+  orderItems OrderItem[]
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+}
+
+model Message {
+  id String @id @default(uuid())
+  body String @db.LongText
+  sender User @relation(fields: [senderId], references: [id])
+  senderId String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+}
+
+model Complaint {
+  id String @id @default(uuid())
+  note String @db.LongText
+  user User @relation(fields: [userId], references: [id])
+  userId String
+  product Product @relation(fields: [productId], references: [id])
+  productId String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+}
+
+model Cart {
+  id String @id @default(uuid())
+  user User @relation(fields: [userId], references: [id])
+  userId String @unique
+  items CartItem[]
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+}
+
+model CartItem {
+  id String @id @default(uuid())
+  cart Cart @relation(fields: [cartId], references: [id])
+  cartId String
+  product Product @relation(fields: [productId], references: [id])
+  productId String
+  quantity Int
+}
+
+model Order {
+  id String @id @default(uuid())
+  user User @relation(fields: [userId], references: [id])
+  userId String
+  status Status @default(PENDING)
+  payment PaymentStatus @default(UNPAID)
+  orderItems OrderItem[]
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+}
+
+model OrderItem {
+  id String @id @default(uuid())
+  order Order @relation(fields: [orderId], references: [id])
+  orderId String
+  product Product @relation(fields: [productId], references: [id])
+  productId String
+  quantity Int
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum Status {
+  PENDING
+  PROCESSED
+  SENT
+  FINISHED
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+}
