@@ -1,0 +1,57 @@
+"use client";
+
+import Link from "next/link";
+
+export default function Register() {
+  return (
+    <div className="flex justify-center items-center h-screen">
+      <div className="flex flex-col p-10 outline-gray-300 rounded-md bg-white outline-1 shadow-md w-1/3">
+        <h1 className="font-bold text-2xl text-center text-emerald-600 mb-5 underline underline-offset-8 decoration-2">
+          Register
+        </h1>
+        <form className="flex flex-col">
+          <label className="text-sm text-emerald-700 font-bold mb-1.5">
+            Name
+          </label>
+          <input
+            type="name"
+            name="name"
+            className="outline-1 outline-gray-400 rounded-sm mb-3 p-1.5 placeholder:text-sm placeholder:text-normal focus:outline-emerald-600"
+            placeholder="Enter your name here"
+          />
+          <label className="text-sm text-emerald-700 font-bold mb-1.5">
+            Email
+          </label>
+          <input
+            type="email"
+            name="email"
+            className="outline-1 outline-gray-400 rounded-sm mb-3 p-1.5 placeholder:text-sm placeholder:text-normal focus:outline-emerald-600"
+            placeholder="Enter your email here"
+          />
+          <label className="text-sm text-emerald-700 font-bold mb-1.5">
+            Password
+          </label>
+          <input
+            type="password"
+            name="email"
+            className="outline-1 outline-gray-400 rounded-sm mb-3 p-1.5 placeholder:text-sm placeholder:font-normal focus:outline-emerald-600"
+            placeholder="Enter your password"
+          />
+
+          <p className="mb-3 font-medium text-sm text-gray-500">
+            Already have an account?
+            <Link
+              href={"/login"}
+              className="font-medium text-sm text-emerald-600 underline ml-1"
+            >
+              Login
+            </Link>
+          </p>
+          <button className="bg-emerald-500 outline-none rounded-md w-full text-white font-bold px-1 py-2 cursor-pointer hover:bg-emerald-600">
+            Register
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
