@@ -17,9 +17,9 @@ datasource db {
 model User {
   id String @id @default(uuid())
   name String
-  email String
+  email String @unique
   password String
-  role Role
+  role Role @default(USER)
   address String? @db.LongText
   complaints Complaint[]
   messages Message[]
@@ -32,12 +32,14 @@ model User {
 model Category {
   id String @id @default(uuid())
   name String
+  slug String @unique
   products Product[]
 }
 
 model Product {
   id String @id @default(uuid())
   name String
+  slug String @unique
   price Float
   stock Int @default(0)
   category Category @relation(fields: [categoryId], references: [id])
