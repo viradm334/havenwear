@@ -43,5 +43,5 @@ export async function POST(req) {
     maxAge: 60 * 60 * 24,
   });
 
-  return Response.json({ message: "Login Successful!", success: true });
+  return Response.json({ message: "Login Successful!", success: true, role: user.role });
 }

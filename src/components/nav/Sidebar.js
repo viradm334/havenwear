@@ -1,9 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeftStartOnRectangleIcon, ChatBubbleLeftIcon, UsersIcon, EnvelopeIcon, ShoppingBagIcon, InboxArrowDownIcon, HomeIcon } from "@heroicons/react/24/solid";
+import { useRouter } from "next/navigation";
+import { handleLogout } from "@/lib/handleLogout";
+import {
+  ArrowLeftStartOnRectangleIcon,
+  ChatBubbleLeftIcon,
+  UsersIcon,
+  EnvelopeIcon,
+  ShoppingBagIcon,
+  InboxArrowDownIcon,
+  HomeIcon,
+} from "@heroicons/react/24/solid";
 
 export default function Sidebar() {
+  const router = useRouter();
+
   return (
     <div className="flex flex-col w-1/5 bg-gray-800 text-gray-300 min-h-screen pt-3">
       <ul>
@@ -15,7 +27,10 @@ export default function Sidebar() {
           </Link>
         </li>
         <li className="font-medium px-3 py-2 hover:bg-gray-900">
-          <Link href={"/admin/product"} className="flex items-center gap-4 mb-1.5">
+          <Link
+            href={"/admin/product"}
+            className="flex items-center gap-4 mb-1.5"
+          >
             <ShoppingBagIcon className="size-5" />
             Products
           </Link>
@@ -38,17 +53,21 @@ export default function Sidebar() {
             Users
           </Link>
         </li>
-        <li className="font-semimedium  px-3 py-2 hover:bg-gray-900">
+        <li className="font-medium  px-3 py-2 hover:bg-gray-900">
           <Link href={"/product"} className="flex items-center gap-4 mb-1.5">
             <EnvelopeIcon className="size-5" />
             Complaints
           </Link>
         </li>
         <li className="font-medium  px-3 py-2 hover:bg-gray-900">
-          <Link href={"/product"} className="flex items-center gap-4 mb-1.5">
+          <button
+            type="button"
+            onClick={() => handleLogout(router)}
+            className="flex items-center gap-4 mb-1.5 cursor-pointer w-full"
+          >
             <ArrowLeftStartOnRectangleIcon className="size-5" />
             Logout
-          </Link>
+          </button>
         </li>
       </ul>
     </div>
