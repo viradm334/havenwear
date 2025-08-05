@@ -16,6 +16,7 @@
     "@prisma/client": "^6.13.0",
     "bcrypt": "^6.0.0",
     "dayjs": "^1.11.13",
+    "idn-area-data": "^3.1.2",
     "jose": "^6.0.12",
     "next": "15.4.5",
     "pexels": "^1.4.0",

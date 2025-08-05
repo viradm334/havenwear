@@ -1,8 +1,29 @@
 import { PrismaClient } from "../src/generated/prisma/index.js";
+import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 
 async function main() {
+  const hashedPassword = await bcrypt.hash("havenwear101", 10);
+
+  await prisma.user.createMany({
+    data: [
+      {
+        name: "Admin",
+        email: "havenwear@gmail.com",
+        password: hashedPassword,
+        role: "ADMIN",
+      },
+      {
+        name: "Example User",
+        email: "exampleuser@gmail.com",
+        password: hashedPassword,
+        role: "USER",
+      },
+    ],
+    skipDuplicates: true
+  });
+
   await prisma.category.createMany({
     data: [
       {
@@ -26,7 +47,7 @@ async function main() {
         slug: "outerwear",
       },
     ],
-    skipDuplicates: true
+    skipDuplicates: true,
   });
 }
 
