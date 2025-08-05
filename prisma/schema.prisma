@@ -41,17 +41,52 @@ model Product {
   id String @id @default(uuid())
   name String
   slug String @unique
-  price Float
-  stock Int @default(0)
   category Category @relation(fields: [categoryId], references: [id])
   categoryId String
   description String? @db.LongText
-  imageUrl String? @db.LongText
+  variantsTypes VariantType[]
+  productVariants ProductVariant[]
   complaints Complaint[]
   cartItems CartItem[]
-  orderItems OrderItem[]
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
+}
+
+model VariantType {
+  id String @id @default(uuid())
+  product Product @relation(fields: [productId], references: [id])
+  productId String
+  name String
+  options VariantOption[]
+}
+
+model VariantOption {
+  id String @id @default(uuid())
+  variantType VariantType @relation(fields: [variantTypeId], references: [id])
+  variantTypeId String
+  name String
+  value String
+  productSelections ProductVariantOption[]
+}
+
+model ProductVariant {
+  id String @id @default(uuid())
+  product Product @relation(fields: [productId], references: [id])
+  productId String
+  selections ProductVariantOption[]
+  sku String @unique
+  price Float
+  stock Int @default(0)
+  imageUrl String?
+  orderItems OrderItem[]
+}
+
+model ProductVariantOption {
+  id String @id @default(uuid())
+  productVariant ProductVariant @relation(fields: [id], references: [id])
+  productVariantId String
+  variantOption VariantOption @relation(fields: [variantOptionId], references: [id])
+  variantOptionId String
 }
 
 model Message {
@@ -107,8 +142,8 @@ model OrderItem {
   id String @id @default(uuid())
   order Order @relation(fields: [orderId], references: [id])
   orderId String
-  product Product @relation(fields: [productId], references: [id])
-  productId String
+  productVariant ProductVariant @relation(fields: [productVariantId], references: [id])
+  productVariantId String
   quantity Int
 }
 
