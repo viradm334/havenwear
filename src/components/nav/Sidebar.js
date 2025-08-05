@@ -48,7 +48,7 @@ export default function Sidebar() {
           </Link>
         </li>
         <li className="font-medium px-3 py-2 hover:bg-gray-900">
-          <Link href={"/product"} className="flex items-center gap-4 mb-1.5">
+          <Link href={"/admin/users"} className="flex items-center gap-4 mb-1.5">
             <UsersIcon className="size-5" />
             Users
           </Link>
