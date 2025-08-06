@@ -3,7 +3,9 @@ import { jwtVerify } from "jose";
 
 const roleRoutes = {
     '/admin': 'ADMIN',
-    '/user': 'USER'
+    '/user': 'USER',
+    '/checkout': 'USER',
+    '/cart': 'USER'
 }
 
 export async function middleware(req){
@@ -41,5 +43,7 @@ export const config = {
     matcher: [
       '/admin/:path*',
       '/user/:path*',
+      '/cart', 
+      '/checkout',
     ],
   };

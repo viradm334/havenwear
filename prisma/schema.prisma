@@ -113,11 +113,19 @@ model CartItem {
 
 model Order {
   id String @id @default(uuid())
+  orderNumber String @unique
   user User @relation(fields: [userId], references: [id])
   userId String
+  email String
+  phoneNumber String
+  address String
+  city String
+  province String
   status Status @default(PENDING)
   payment PaymentStatus @default(UNPAID)
   orderItems OrderItem[]
+  paymentMethod PaymentMethod @default(TRANSFER)
+  paid_at DateTime?
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
 }
@@ -142,9 +150,17 @@ enum Status {
   PROCESSED
   SENT
   FINISHED
+  CANCELED
 }
 
 enum PaymentStatus {
   UNPAID
   PAID
+  REJECTED
+}
+
+enum PaymentMethod {
+  TRANSFER
+  CREDITCARD
+  INDOMARET
 }
