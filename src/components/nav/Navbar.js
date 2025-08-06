@@ -1,5 +1,7 @@
 "use client";
 import Image from "next/image";
+import { ShoppingCartIcon } from "@heroicons/react/24/solid";
+import Link from "next/link";
 
 export default function Navbar() {
   return (
@@ -8,7 +10,8 @@ export default function Navbar() {
       <div className="">
         <ul className="flex gap-2">
           <li className="text-slate-600 font-medium">Products</li>
-          <li className="text-slate-600 font-medium">Categories</li>
+          <Link href={'/login'} className="text-slate-600 font-medium">Login</Link>
+          <li className="text-slate-600 font-medium"><ShoppingCartIcon className="size-6"/></li>
         </ul>
       </div>
     </nav>
