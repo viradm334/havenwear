@@ -13,14 +13,13 @@ import {
   HomeIcon,
 } from "@heroicons/react/24/solid";
 
-export default function Sidebar() {
+export default function Sidebar({role}) {
   const router = useRouter();
 
   return (
     <div className="flex flex-col w-1/5 bg-gray-800 text-gray-300 min-h-screen pt-3">
       <ul>
-        <li></li>
-        <li className="font-medium px-3 py-2 hover:bg-gray-900">
+      {role === 'ADMIN' && (<><li className="font-medium px-3 py-2 hover:bg-gray-900">
           <Link href={"/admin"} className="flex items-center gap-4 mb-1.5">
             <HomeIcon className="size-5" />
             Home
@@ -58,7 +57,8 @@ export default function Sidebar() {
             <EnvelopeIcon className="size-5" />
             Complaints
           </Link>
-        </li>
+        </li></>)}
+        
         <li className="font-medium  px-3 py-2 hover:bg-gray-900">
           <button
             type="button"
