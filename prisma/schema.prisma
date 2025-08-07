@@ -126,6 +126,7 @@ model Order {
   orderItems OrderItem[]
   paymentMethod PaymentMethod @default(TRANSFER)
   paid_at DateTime?
+  payment_confirmed_at DateTime?
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
 }
