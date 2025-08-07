@@ -39,7 +39,7 @@ export default function LoginForm() {
         if(data.role === 'ADMIN'){
           router.push('/admin');
         }else{
-          router.push('/user');
+          router.push('/user/profile');
         }
       } else {
         alert(`Error: ${data.message}`);

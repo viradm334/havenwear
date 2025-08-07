@@ -175,7 +175,7 @@ export default function Checkout() {
                 <option value={'INDOMARET'}>Indomaret</option>
             </select>
 
-            <button type="submit" className="text-white text-center bg-emerald-800 rounded hover:bg-900 w-1/2 px-3 py-2 mt-4 cursor-pointer">Buat Pesanan</button>
+            <button type="submit" className="text-white text-center bg-emerald-800 rounded hover:bg-900 w-full px-3 py-2 mt-4 cursor-pointer">Buat Pesanan</button>
           </form>
           <div className="flex flex-col w-1/2">
           <h1 className="font-bold mb-3 text-center">Barang yang Dipesan</h1>
