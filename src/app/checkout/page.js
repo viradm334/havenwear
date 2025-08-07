@@ -200,6 +200,9 @@ export default function Checkout() {
                 <h4 className="font-medium text-sm text-slate-700">
                   {item.productSize.product.name}
                 </h4>
+                <h4 className="font-medium text-sm text-slate-700">
+                  {item.productSize.name}
+                </h4>
                 <h5 className="text-gray-800 font-semibold mb-2">
                   {formatCurrency(item.productSize.product.price)}
                 </h5>

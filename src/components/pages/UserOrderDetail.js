@@ -1,58 +1,73 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import { formatCurrency } from "@/utils/formatCurrency";
 import Link from "next/link";
 import Image from "next/image";
-import Modal from "../ui/Modal";
-import InputResiForm from "../form/InputResiForm";
 
-export default function AdminOrderDetail() {
-  const [order, setOrder] = useState({});
-  const params = useParams();
-  const { orderNumber } = params;
-  const [isOpen, setIsOpen] = useState(false);
+export default function UserOrderDetail({ orderNumber }) {
+  const [order, setOrder] = useState([]);
 
   useEffect(() => {
+    if (!orderNumber) return;
+
     fetch(`/api/orders/${orderNumber}`)
       .then((res) => res.json())
       .then((data) => setOrder(data.orderWithTotal));
-  }, []);
+  }, [orderNumber]);
 
-  const confirmPayment = async () => {
-    try {
-      const confirmed = confirm("Anda yakin untuk konfirmasi pembayaran?");
+  const payOrder = async () => {
+    const confirmed = confirm('Anda yakin untuk membayar pesanan?');
 
-      if (!confirmed) {
-        return;
-      } else {
-        const res = await fetch(`/api/pay/confirm/${order.orderNumber}`, {
-          method: "PATCH",
-        });
+    if(confirmed){
+        try{
+            const res = await fetch(`/api/pay/${orderNumber}`, {
+                method: 'PATCH'
+            });
 
-        const data = await res.json();
+            const data = await res.json();
 
-        if (res.ok) {
-          alert(data.message);
-          window.location.reload();
-        } else {
-          console.error(data.message);
-          alert(data.message);
+            if(res.ok){
+                alert(data.message);
+                window.location.reload();
+            }else{
+                alert(data.message);
+            }
+        }catch(err){
+            console.error(err.message);
+            alert(err.message);
         }
-      }
-    } catch (err) {
-      console.error(err.message);
-      alert(err.message);
     }
   };
 
-  return (<>
-  <Modal title="Input No. Resi" isOpen={isOpen} onClose={() => setIsOpen(false)}>
-    <InputResiForm orderNumber={orderNumber}/>
-  </Modal>
-    <div className="flex flex-col p-2">
+  const finishOrder = async() => {
+    const confirmed = confirm('Anda yakin menyelesaikan pesanan?');
+
+    if(confirmed){
+        try{
+            const res = await fetch(`/api/orders/finish/${orderNumber}`, {
+                method: 'PATCH'
+            });
+
+            const data = await res.json();
+
+            if(res.ok){
+                alert(data.message);
+                window.location.reload();
+            }else{
+                alert(data.message);
+            }
+        }catch(err){
+            console.error(err.message);
+            alert(err.message);
+        }
+    }
+  }
+
+  return(<>
+      <div className="flex flex-col p-2">
       <div className="flex gap-5 mb-3">
         <div>
           <h4 className="font-bold">No. Order</h4>
@@ -147,26 +162,25 @@ export default function AdminOrderDetail() {
       </h1>
 
       <div className="flex gap-4">
-        <Link href={'/admin/orders'} className="px-3 py-1 rounded text-white bg-blue-500 hover:bg-blue-600 cursor-pointer">Kembali
+        <Link href={'/user/orders'} className="px-3 py-1 rounded text-white bg-blue-500 hover:bg-blue-600 cursor-pointer">Kembali
         </Link>
-        {order.paid_at && !order.payment_confirmed_at && (
+        {order.payment === 'UNPAID' && (
           <button
             className="px-6 py-1 rounded text-white bg-yellow-500 hover:bg-yellow-600 cursor-pointer"
-            onClick={confirmPayment}
+            onClick={payOrder}
           >
-            Konfirmasi Pembayaran
+            Bayar Pesanan
           </button>
         )}
-        {order.status === "PROCESSED" && (
+        {order.status === 'SENT' && (
           <button
             className="px-6 py-1 rounded text-white bg-green-500 hover:bg-green-600 cursor-pointer"
-            onClick={() => setIsOpen(true)}
+            onClick={finishOrder}
           >
-            Kirim Barang
+            Selesaikan Pesanan
           </button>
         )}
       </div>
     </div>
-  </>
-  );
+  </>)
 }
