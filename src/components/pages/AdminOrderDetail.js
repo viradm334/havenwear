@@ -6,11 +6,14 @@ import dayjs from "dayjs";
 import { formatCurrency } from "@/utils/formatCurrency";
 import Link from "next/link";
 import Image from "next/image";
+import Modal from "../ui/Modal";
+import InputResiForm from "../form/InputResiForm";
 
 export default function AdminOrderDetail() {
   const [order, setOrder] = useState({});
   const params = useParams();
   const { orderNumber } = params;
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     fetch(`/api/orders/${orderNumber}`)
@@ -44,7 +47,10 @@ export default function AdminOrderDetail() {
     }
   };
 
-  return (
+  return (<>
+  <Modal title="Input No. Resi" isOpen={isOpen} onClose={() => setIsOpen(false)}>
+    <InputResiForm orderNumber={orderNumber}/>
+  </Modal>
     <div className="flex flex-col p-2">
       <div className="flex gap-5 mb-3">
         <div>
@@ -64,8 +70,8 @@ export default function AdminOrderDetail() {
           <p className="mb-2">{order.payment}</p>
         </div>
         <div>
-          <h4 className="font-bold">Metode Pembayaran</h4>
-          <p className="mb-2">{order.paymentMethod}</p>
+          <h4 className="font-bold">No. Resi</h4>
+          <p className="mb-2">{order.no_resi || '-'}</p>
         </div>
       </div>
       <div className="flex gap-5 mb-3">
@@ -80,6 +86,10 @@ export default function AdminOrderDetail() {
         <div>
           <h4 className="font-bold">No. HP</h4>
           <p className="mb-2">{order.phoneNumber}</p>
+        </div>
+        <div>
+          <h4 className="font-bold">Metode Pembayaran</h4>
+          <p className="mb-2">{order.paymentMethod}</p>
         </div>
       </div>
       <div className="flex gap-5">
@@ -136,9 +146,8 @@ export default function AdminOrderDetail() {
       </h1>
 
       <div className="flex gap-4">
-        <button className="px-3 py-1 rounded text-white bg-blue-500 hover:bg-blue-600 cursor-pointer">
-          Kembali
-        </button>
+        <Link href={'/admin/orders'} className="px-3 py-1 rounded text-white bg-blue-500 hover:bg-blue-600 cursor-pointer">Kembali
+        </Link>
         {order.paid_at && !order.payment_confirmed_at && (
           <button
             className="px-6 py-1 rounded text-white bg-yellow-500 hover:bg-yellow-600 cursor-pointer"
@@ -150,12 +159,13 @@ export default function AdminOrderDetail() {
         {order.status === "PROCESSED" && (
           <button
             className="px-6 py-1 rounded text-white bg-green-500 hover:bg-green-600 cursor-pointer"
-            onClick={confirmPayment}
+            onClick={() => setIsOpen(true)}
           >
             Kirim Barang
           </button>
         )}
       </div>
     </div>
+  </>
   );
 }

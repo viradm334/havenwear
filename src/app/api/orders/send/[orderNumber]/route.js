@@ -15,7 +15,9 @@ export async function PATCH(req, {params}){
                 updated_at: new Date(),
                 sent_at: new Date()
             }
-        })
+        });
+
+        return Response.json({message: "Succesfully send order!", success: true});
     }catch(err){
         if(err.code === 'P2025'){
             return Response.json({message: "Order number not found!"}, {status: 404});
