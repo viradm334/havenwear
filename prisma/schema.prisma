@@ -123,10 +123,17 @@ model Order {
   province String
   status Status @default(PENDING)
   payment PaymentStatus @default(UNPAID)
+  complaintStatus ComplaintStatus?
   orderItems OrderItem[]
   paymentMethod PaymentMethod @default(TRANSFER)
   paid_at DateTime?
   payment_confirmed_at DateTime?
+  rejected_at DateTime?
+  no_resi String?
+  sent_at DateTime?
+  arrived_at DateTime?
+  complained_at DateTime?
+  finished_at DateTime?
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
 }
@@ -150,6 +157,7 @@ enum Status {
   PENDING
   PROCESSED
   SENT
+  COMPLAINED
   FINISHED
   CANCELED
 }
@@ -164,4 +172,10 @@ enum PaymentMethod {
   TRANSFER
   CREDITCARD
   INDOMARET
+}
+
+enum ComplaintStatus {
+  PENDING
+  UNDER_REVIEW
+  COMPLETED
 }
