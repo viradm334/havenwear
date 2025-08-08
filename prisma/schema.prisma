@@ -50,7 +50,6 @@ model Product {
   price Float
   productSizes ProductSize[]
   productPhotos ProductPhoto[]
-  complaints Complaint[]
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
 }
@@ -84,13 +83,20 @@ model Message {
 
 model Complaint {
   id String @id @default(uuid())
-  note String @db.LongText
+  message String @db.LongText
   user User @relation(fields: [userId], references: [id])
   userId String
-  product Product @relation(fields: [productId], references: [id])
-  productId String
+  orderItem OrderItem? @relation(fields: [orderItemId], references: [id])
+  orderItemId String?
+  order Order @relation(fields: [orderId], references: [id])
+  orderId String
+  status ComplaintStatus @default(OPEN)
+  adminMessage String? @db.LongText
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
+  reviewed_at DateTime?
+  resolved_at DateTime?
+  canceled_at DateTime?
 }
 
 model Cart {
@@ -123,8 +129,8 @@ model Order {
   province String
   status Status @default(PENDING)
   payment PaymentStatus @default(UNPAID)
-  complaintStatus ComplaintStatus?
   orderItems OrderItem[]
+  complaints Complaint[]
   paymentMethod PaymentMethod @default(TRANSFER)
   paid_at DateTime?
   payment_confirmed_at DateTime?
@@ -146,6 +152,7 @@ model OrderItem {
   productSizeId String
   quantity Int
   price Float
+  complaints Complaint[]
 }
 
 enum Role {
@@ -175,7 +182,8 @@ enum PaymentMethod {
 }
 
 enum ComplaintStatus {
-  PENDING
-  UNDER_REVIEW
-  COMPLETED
+  OPEN
+  CANCELED
+  REVIEWED
+  RESOLVED
 }
