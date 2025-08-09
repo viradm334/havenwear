@@ -25,7 +25,8 @@ model User {
   province String?
   phoneNumber String?
   complaints Complaint[]
-  messages Message[]
+  sentMessages Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
   cart Cart?
   orders Order[]
   created_at DateTime @default(now())
@@ -74,9 +75,11 @@ model ProductPhoto {
 
 model Message {
   id String @id @default(uuid())
-  body String @db.LongText
-  sender User @relation(fields: [senderId], references: [id])
+  content String @db.LongText
+  sender User @relation("SentMessages", fields: [senderId], references: [id])
   senderId String
+  receiver User @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  receiverId String
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
 }
