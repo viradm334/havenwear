@@ -62,7 +62,7 @@ export default function EditProfileForm({ user }) {
 
   return (
     <form
-      className="flex flex-col outline-1 outline-gray-300 p-5 w-1/2 rounded shadow-md"
+      className="flex flex-col outline-1 outline-gray-300 p-5 w-1/2 rounded shadow-md mx-auto"
       onSubmit={handleSubmit}
     >
       <h1 className="font-bold mb-3 text-center">Edit Profile</h1>
