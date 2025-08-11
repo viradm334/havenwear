@@ -22,6 +22,7 @@ export default function AdminUsers() {
             <th className="border border-gray-300 p-2">No.HP</th>
             <th className="border border-gray-300 p-2">Role</th>
             <th className="border border-gray-300 p-2">Tgl Bergabung</th>
+            <th className="border border-gray-300 p-2">Order</th>
           </tr>
         </thead>
         <tbody>
@@ -35,6 +36,7 @@ export default function AdminUsers() {
               </td>
               <td className="border border-gray-300 p-2">{user.role}</td>
               <td className="border border-gray-300 p-2">{dayjs(user.created_at).format("DD-MM-YYYY")}</td>
+              <td className="border border-gray-300 p-2">{user._count.orders}</td>
             </tr>
           ))}
         </tbody>

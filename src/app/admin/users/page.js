@@ -4,7 +4,7 @@ import AdminLayout from "@/components/layout/AdminLayout"
 import AdminUsers from "@/components/pages/AdminUsers"
 
 export default function AdminUsersPage(){
-    return(<AdminLayout>
+    return(<AdminLayout title="Users">
         <AdminUsers/>
     </AdminLayout>)
 }

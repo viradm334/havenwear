@@ -1,15 +1,25 @@
 "use client";
 
 import Link from "next/link";
+import { useState, useEffect } from "react";
+import Image from "next/image";
 
 export default function AdminProducts() {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    fetch("/api/products")
+      .then((res) => res.json())
+      .then((item) => setProducts(item.data));
+  }, []);
+
   return (
     <>
-    <Link href={'/admin/product/create'}>
-      <button className="outline-none rounded px-3 py-2 bg-emerald-600 text-white mb-6 cursor-pointer hover:bg-emerald-700">
-        + Create New Product
-      </button>
-    </Link>
+      <Link href={"/admin/product/create"}>
+        <button className="outline-none rounded px-3 py-2 bg-emerald-600 text-white mb-6 cursor-pointer hover:bg-emerald-700">
+          + Create New Product
+        </button>
+      </Link>
       <table className="border-collapse border border-gray-400 w-full text-center">
         <thead>
           <tr>
@@ -23,15 +33,27 @@ export default function AdminProducts() {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td className="border border-gray-300 p-2">Indiana</td>
-            <td className="border border-gray-300 p-2">Indiana</td>
-            <td className="border border-gray-300 p-2">Indianapolis</td>
-            <td className="border border-gray-300 p-2">Indianapolis</td>
-            <td className="border border-gray-300 p-2">Indianapolis</td>
-            <td className="border border-gray-300 p-2">Indianapolis</td>
-            <td className="border border-gray-300 p-2">Indianapolis</td>
-          </tr>
+          {products.map((product, index) => (
+            <tr key={product.id}>
+              <td className="border border-gray-300 p-2">{index + 1}</td>
+              <td className="border border-gray-300 p-2">{<Image src={'/placeholder.jpg'} alt="product-image" height={160} width={160}/>}</td>
+              <td className="border border-gray-300 p-2">{product.name}</td>
+              <td className="border border-gray-300 p-2">
+                {product.category.name}
+              </td>
+              <td className="border border-gray-300 p-2">
+                {product.totalStock}
+              </td>
+              <td className="border border-gray-300 p-2">
+                {product.totalSold}
+              </td>
+              <td className="border border-gray-300 p-2">
+                <Link href={`/admin/products/${product.slug}`} className="outline-none bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md">
+                Details
+                </Link>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </>
