@@ -11,49 +11,76 @@ export async function POST(req) {
       productSizes,
       phoneNumber,
       email,
-      paymentMethod
+      paymentMethod,
+      cartId
     } = body;
     const orderNumber = `ORD-${Date.now()}`;
 
     const sizeIds = productSizes.map((item) => item.productSizeId);
 
-    const productSizeRecords = await prisma.productSize.findMany({
-      where: { id: { in: sizeIds } },
-      include: { product: true },
-    });
-
-    const order = await prisma.order.create({
-      data: {
-        orderNumber: orderNumber,
-        userId: userId,
-        email: email,
-        phoneNumber: phoneNumber,
-        address: address,
-        city: city,
-        province: province,
-        paymentMethod: paymentMethod,
-        orderItems: {
-          create: productSizes.map((size) => {
-            const record = productSizeRecords.find(
-              (p) => p.id === size.productSizeId
-            );
-            return {
-              productSizeId: size.productSizeId,
-              quantity: size.quantity,
-              price: record?.product.price ?? 0,
-            };
-          }),
+    await prisma.$transaction(async (tx) => {
+      const productSizeRecords = await tx.productSize.findMany({
+        where: { id: { in: sizeIds } },
+        include: { product: true },
+      });
+    
+      const order = await tx.order.create({
+        data: {
+          orderNumber,
+          userId,
+          email,
+          phoneNumber,
+          address,
+          city,
+          province,
+          paymentMethod,
+          orderItems: {
+            create: productSizes.map((size) => {
+              const record = productSizeRecords.find(
+                (p) => p.id === size.productSizeId
+              );
+              return {
+                productSizeId: size.productSizeId,
+                quantity: size.quantity,
+                price: record?.product.price ?? 0,
+              };
+            }),
+          },
         },
-      },
-    });
+      });
+    
+      await Promise.all(
+        productSizes.map((size) =>
+          tx.productSize.update({
+            where: { id: size.productSizeId },
+            data: {
+              stock: {
+                decrement: size.quantity,
+              },
+            },
+          })
+        )
+      );
 
-    const orderNum = order.orderNumber;
+      await tx.cartItem.deleteMany({
+        where: {
+          cartId: cartId,
+          productSizeId: {
+            in: sizeIds
+          }
+        }
+      });
+        
+    });
+    
+    const orderNum = orderNumber;
 
     return Response.json({
       message: "Berhasil membuat pesanan!",
       orderNumber: orderNum,
     });
   } catch (err) {
+    console.error(err.message);
     return Response.json({ message: err.message }, { status: 500 });
   }
 }
