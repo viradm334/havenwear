@@ -14,6 +14,7 @@ export async function GET(req, {params}){
             },
             orderItems : {
                 select: {
+                    id: true,
                     price: true,
                     quantity: true,
                     productSize: {

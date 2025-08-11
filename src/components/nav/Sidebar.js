@@ -67,7 +67,7 @@ export default function Sidebar({ role }) {
             </li>
             <li className="font-medium  px-3 py-2 hover:bg-gray-900">
               <Link
-                href={"/product"}
+                href={"/admin/complaints"}
                 className="flex items-center gap-4 mb-1.5"
               >
                 <EnvelopeIcon className="size-5" />
@@ -76,29 +76,6 @@ export default function Sidebar({ role }) {
             </li>
           </>
         )}
-        {role === "USER" && (
-          <>
-            <li className="font-medium  px-3 py-2 hover:bg-gray-900">
-              <Link
-                href={"/user/profile"}
-                className="flex items-center gap-4 mb-1.5"
-              >
-                <UserCircleIcon className="size-5" />
-                Profile
-              </Link>
-            </li>
-            <li className="font-medium  px-3 py-2 hover:bg-gray-900">
-              <Link
-                href={"/user/orders"}
-                className="flex items-center gap-4 mb-1.5"
-              >
-                <DocumentDuplicateIcon className="size-5" />
-                My Orders
-              </Link>
-            </li>
-          </>
-        )}
-
         <li className="font-medium  px-3 py-2 hover:bg-gray-900">
           <button
             type="button"

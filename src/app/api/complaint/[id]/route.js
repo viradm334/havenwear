@@ -7,6 +7,44 @@ export async function GET(req,{params}) {
         const complaint = await prisma.complaint.findUnique({
             where: {
                 id: id
+            },
+            select : {
+                id: true,
+                message: true,
+                adminMessage: true,
+                created_at: true,
+                resolved_at: true,
+                reviewed_at: true,
+                canceled_at: true,
+                status: true,
+                orderItem: {
+                    select : {
+                        id: true,
+                        quantity: true,
+                        order: {
+                            select: {
+                                orderNumber: true,
+                                user: {
+                                    select: {
+                                        name: true
+                                    }
+                                }
+                            }
+                        },
+                        productSize: {
+                            select: {
+                                name: true,
+                                product: {
+                                    select: {
+                                        name: true,
+                                        price: true,
+                                        slug: true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         });
 

@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 
-export async function PATCH(params) {
+export async function PATCH(req, {params}) {
     try{
         const {id} = await params;
 

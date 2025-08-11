@@ -3,12 +3,10 @@ import prisma from "@/lib/prisma";
 export async function POST(req){
     try{
         const body = await req.json();
-        const {userId, orderId, orderItemId, message} = body;
+        const {orderItemId, message} = body;
 
         const complaint = await prisma.complaint.create({
             data: {
-                userId,
-                orderId,
                 orderItemId,
                 message
             }
