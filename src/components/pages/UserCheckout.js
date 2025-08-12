@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { formatCurrency } from "@/utils/formatCurrency";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function UserCheckout({user}) {
+  const router = useRouter();
   const [cart, setCart] = useState(null);
   const [cartItems, setCartItems] = useState([]);
   const [formData, setFormData] = useState({
@@ -68,6 +70,7 @@ export default function UserCheckout({user}) {
 
         if(res.ok){
             alert(data.message);
+            router.push('/user/orders')
         }else{
             alert(data.message);
             console.error(data.message);

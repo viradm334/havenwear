@@ -33,7 +33,7 @@ export default function AdminComplaintDetail() {
         <div className="flex gap-5 mb-3">
           <div>
             <h4 className="font-bold">No. Order</h4>
-            <p className="mb-2">{complaint.orderItem.order.orderNumber}</p>
+            <p className="mb-2">{complaint.orderItem?.order?.orderNumber || ''}</p>
           </div>
           <div>
             <h4 className="font-bold">Tanggal Komplain</h4>
@@ -72,13 +72,17 @@ export default function AdminComplaintDetail() {
           <div>
             <h4 className="font-bold">Tanggal Review</h4>
             <p className="mb-2">
-              {dayjs(complaint.reviewed_at).format("DD-MM-YYYY")}
+            {complaint.reviewed_at
+                ? dayjs(complaint.reviewed_at).format("DD-MM-YYYY")
+                : "-"}
             </p>
           </div>
           <div>
             <h4 className="font-bold">Tanggal Resolve</h4>
             <p className="mb-2">
-              {dayjs(complaint.resolved_at).format("DD-MM-YYYY")}
+            {complaint.resolved_at
+                ? dayjs(complaint.resolved_at).format("DD-MM-YYYY")
+                : "-"}
             </p>
           </div>
         </div>

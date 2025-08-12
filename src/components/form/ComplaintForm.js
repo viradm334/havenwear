@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function ComplaintForm({ orderItemId, orderItemName }) {
+export default function ComplaintForm({ orderItemId, orderItemName, userId }) {
   const [formData, setFormData] = useState({
     orderItemId: "",
     message: "",
@@ -17,6 +17,7 @@ export default function ComplaintForm({ orderItemId, orderItemName }) {
 
     try {
       formData.orderItemId = orderItemId;
+      formData.userId = userId;
       const res = await fetch("/api/complaint/create", {
         method: "POST",
         body: JSON.stringify(formData),

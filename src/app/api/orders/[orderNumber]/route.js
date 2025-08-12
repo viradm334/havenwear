@@ -26,6 +26,11 @@ export async function GET(req, {params}){
                                 }
                             }
                         }
+                    },
+                    complaints: {
+                        select: {
+                            id: true
+                        }
                     }
                 }
             }

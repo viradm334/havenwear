@@ -82,6 +82,7 @@ export default function UserOrderDetail({ orderNumber }) {
           <ComplaintForm
             orderItemId={orderItemId}
             orderItemName={orderItemName}
+            userId={order.userId}
           />
         )}
       </Modal>
@@ -174,7 +175,7 @@ export default function UserOrderDetail({ orderNumber }) {
               <h5 className="text-gray-800 font-medium mb-2">
                 {formatCurrency(item.price * item.quantity)}
               </h5>
-              {order.status === "SENT" && (
+              {(order.status === "SENT" && item.complaints.length === 0) ? (
                 <button
                   className="px-3 py-1 w-1/2 rounded text-white bg-yellow-500 hover:bg-yellow-600 cursor-pointer"
                   onClick={() => {
@@ -185,7 +186,7 @@ export default function UserOrderDetail({ orderNumber }) {
                 >
                   Komplain Produk
                 </button>
-              )}
+              ) : ''}
             </div>
           </div>
         ))}

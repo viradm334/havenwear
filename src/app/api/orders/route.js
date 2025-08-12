@@ -19,6 +19,9 @@ export async function GET(req){
                 address: true,
                 province: true,
                 city: true
+            },
+            orderBy: {
+                created_at: 'desc'
             }
         });
 

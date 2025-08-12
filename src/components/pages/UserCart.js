@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { formatCurrency } from "@/utils/formatCurrency";
 import Image from "next/image";
+import { TrashIcon } from "@heroicons/react/24/solid";
 
 export default function UserCart() {
   const [cart, setCart] = useState(null);
@@ -23,6 +24,30 @@ export default function UserCart() {
     }
   }, [cart]);
 
+  const handleDelete = async (id) => {
+    const confirmed = confirm(
+      "Apa anda yakin untuk menghapus barang dari keranjang?"
+    );
+
+    if (confirmed) {
+      const res = await fetch(`/api/cart/delete-item/${id}`, {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert(data.message);
+        window.location.reload();
+      } else {
+        console.error(data.message);
+        alert(data.message);
+      }
+    } else {
+      return;
+    }
+  };
+
   const addQuantity = () => {
     setQuantity(quantity + 1);
   };
@@ -32,15 +57,12 @@ export default function UserCart() {
       return;
     } else {
       setQuantity(quantity - 1);
-      console.log(cart.id);
-      console.log(typeof cart.id);
-      console.log(size);
     }
   };
 
   return (
     <div className="main flex">
-      <div className="flex flex-col mt-3 p-5 w-5/6">
+      <div className="flex flex-col p-5 w-5/6">
         {cartItems.length !== 0 ? (
           <div>
             {cartItems.map((item) => (
@@ -87,6 +109,9 @@ export default function UserCart() {
                     >
                       +
                     </button>
+                    <button onClick={() => handleDelete(item.id)}>
+                      <TrashIcon className="size-5 text-red-600 ml-4 cursor-pointer" />
+                    </button>
                   </div>
                 </div>
               </div>
@@ -100,7 +125,7 @@ export default function UserCart() {
           </div>
         ) : (
           <div>
-            <p className="mb-3">Cart is Empty</p>
+            <p className="mb-3 text-center">Cart is Empty</p>
             <Link
               href={"/"}
               className="text-white text-center bg-emerald-800 rounded hover:bg-emerald-900 w-full px-3 py-2 mt-4 cursor-pointer"

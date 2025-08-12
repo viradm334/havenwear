@@ -45,6 +45,7 @@ export default function Navbar({ user = null }) {
                     <Link href="/user/profile" className="px-4 py-2 hover:bg-slate-100">Profile</Link>
                     <Link href="/user/orders" className="px-4 py-2 hover:bg-slate-100">Orders</Link>
                     <Link href="/user/wishlist" className="px-4 py-2 hover:bg-slate-100">Wishlist</Link>
+                    <Link href="/user/complaints" className="px-4 py-2 hover:bg-slate-100">Complaints</Link>
                     <p
                       className="px-4 py-2 hover:bg-slate-100 text-red-500 cursor-pointer"
                       onClick={() => {handleLogout(router)}}

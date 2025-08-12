@@ -8,7 +8,8 @@ export async function PATCH(req, {params}){
             where: {id: id},
             data: {
                 status: "CANCELED",
-                updated_at: new Date()
+                updated_at: new Date(),
+                canceled_at: new Date()
             }
         });
 

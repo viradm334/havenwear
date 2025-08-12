@@ -28,6 +28,9 @@ export async function GET(req, { params }) {
           },
         },
       },
+      orderBy: {
+        created_at: 'desc'
+      }
     });
 
     return Response.json({ message: "Successfully retrieved orders!", orders });
