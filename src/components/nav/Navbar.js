@@ -6,7 +6,7 @@ import { handleLogout } from "@/lib/handleLogout";
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-export default function Navbar({ user = null }) {
+export default function Navbar({ user = null, onToggleChat }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
   const router = useRouter();
@@ -46,6 +46,7 @@ export default function Navbar({ user = null }) {
                     <Link href="/user/orders" className="px-4 py-2 hover:bg-slate-100">Orders</Link>
                     <Link href="/user/wishlist" className="px-4 py-2 hover:bg-slate-100">Wishlist</Link>
                     <Link href="/user/complaints" className="px-4 py-2 hover:bg-slate-100">Complaints</Link>
+                    <button className="w-full px-4 py-2 text-start hover:bg-slate-100 cursor-pointer" onClick={onToggleChat}>Chat</button>
                     <p
                       className="px-4 py-2 hover:bg-slate-100 text-red-500 cursor-pointer"
                       onClick={() => {handleLogout(router)}}
