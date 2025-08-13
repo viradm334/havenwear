@@ -18,7 +18,6 @@ export async function GET(req){
         const userId = payload.id;
 
         const cart = await prisma.cart.findUnique({where: {userId: userId}});
-        console.log(cart);
 
         return Response.json(cart);
     }catch(err){

@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Navbar from "@/components/nav/Navbar";
 import { useEffect, useState } from "react";
 import { formatCurrency } from "@/utils/formatCurrency";
 import Link from "next/link";
