@@ -15,13 +15,12 @@ import {
   DocumentDuplicateIcon, HomeModernIcon
 } from "@heroicons/react/24/solid";
 
-export default function Sidebar({ role }) {
+export default function Sidebar({ onToggleChat }) {
   const router = useRouter();
 
   return (
     <div className="flex flex-col w-1/6 bg-gray-800 text-gray-300 min-h-screen pt-3">
       <ul>
-        {role === "ADMIN" && (
           <>
             <li className="font-medium px-3 py-2 hover:bg-gray-900">
               <Link href={"/admin"} className="flex items-center gap-4 mb-1.5">
@@ -48,13 +47,13 @@ export default function Sidebar({ role }) {
               </Link>
             </li>
             <li className="font-medium px-3 py-2 hover:bg-gray-900">
-              <Link
-                href={"/product"}
-                className="flex items-center gap-4 mb-1.5"
+              <button
+                className="flex w-full items-center gap-4 mb-1.5 cursor-pointer"
+                onClick={onToggleChat}
               >
                 <ChatBubbleLeftIcon className="size-5" />
                 Chats
-              </Link>
+              </button>
             </li>
             <li className="font-medium px-3 py-2 hover:bg-gray-900">
               <Link
@@ -75,7 +74,6 @@ export default function Sidebar({ role }) {
               </Link>
             </li>
           </>
-        )}
         <li className="font-medium  px-3 py-2 hover:bg-gray-900">
           <button
             type="button"

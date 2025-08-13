@@ -6,10 +6,11 @@ import ReceiverChatBubble from "@/components/ui/ReceiverChatBubble";
 import SenderChatBubble from "@/components/ui/SenderChatBubble";
 import UserBox from "@/components/ui/UserBox";
 
-export default function ChatBox({ role }) {
+export default function ChatBox({ role, isOpen, onClose, userId }) {
   const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([]);
   const textareaRef = useRef(null);
-
+  
   useEffect(() => {
     const textarea = textareaRef.current;
     if (textarea) {
@@ -17,6 +18,14 @@ export default function ChatBox({ role }) {
       textarea.style.height = `${textarea.scrollHeight}px`; // Set to scroll height
     }
   }, [message]);
+
+  useEffect(() => {
+    if(!userId) return;
+
+    // fetch(`/api/chat/${userId}`).then(res => res.json()).then(data => setMessages(data.messages))
+  }, [userId]);
+  
+  if(!isOpen) return null;
 
   const dummyUsers = Array.from({ length: 20 }, (_, i) => ({
     name: `User ${i + 1}`,
@@ -36,6 +45,7 @@ export default function ChatBox({ role }) {
           <button
             className="text-red-500 hover:text-red-600 font-bold cursor-pointer"
             title="Close"
+            onClick={onClose}
           >
             <XMarkIcon className="size-5" />
           </button>

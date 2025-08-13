@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { pusher } from "@/lib/pusher";
 
 export async function POST(req) {
     try{
@@ -12,6 +13,12 @@ export async function POST(req) {
                 content
             }
         });
+
+        await pusher.trigger(`chat-${receiverId}`, "new-message", {
+            senderId, 
+            content,
+            created_at: chat.created_at
+        })
 
         return Response.json({message: "Successfully sent message!", success: true, chat})
     }catch(err){
