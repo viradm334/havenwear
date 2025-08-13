@@ -1,24 +1,14 @@
 import prisma from "@/lib/prisma";
+import { pusher } from "@/lib/pusher";
 
 export async function GET(req, {params}){
     try{
         const {userId} = await params;
 
-        const admin = await prisma.user.findFirst({where: {email: "admin@gmail.com"}});
-        const adminId = admin?.id;
+        pusher.trigger(`chat-045317fb-e5e6-4e7e-80e0-0949cefdf980`, "test-event", {note: 'Hello world'});
+       
 
-        const messages = await prisma.message.findMany({
-            where : {
-                OR : [
-                    {senderId: userId, receiverId: adminId},
-                    {senderId: adminId, receiverId: userId}
-                ]
-            }, orderBy: {
-                created_at : 'asc'
-            }
-        });
-
-        return Response.json({message: "Successfully fetched messages!", messages});
+        return Response.json({message: "Successfully hit event"});
     }catch(err){
         console.error(err.message);
         return Response.json({message: err.message}, {status: 500});

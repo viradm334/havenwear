@@ -37,7 +37,7 @@ export async function POST(req) {
     console.log(receiverId);
 
     if (senderId !== receiverId) {
-      await pusher.trigger(`chat-${receiverId}`, "new-message", {
+      pusher.trigger(`chat-${receiverId}`, "new-message", {
         id: chat.id,
         receiverId,
         senderId,

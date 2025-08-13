@@ -17,8 +17,6 @@ export default function UserLayout({ title = "Home", children }) {
       .then((data) => setUser(data.user));
   }, []);
 
-  if (!user) return null;
-
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar user={user} onToggleChat={() => setIsOpen((prev) => !prev)}  />
@@ -28,7 +26,7 @@ export default function UserLayout({ title = "Home", children }) {
           </header>
           {React.cloneElement(children, { user })}
         </main>
-        <ChatBox role={"USER"} isOpen={isOpen} onClose={() => {setIsOpen(false)}} userId={user.id} />
+        <ChatBox role={"USER"} isOpen={isOpen} onClose={() => {setIsOpen(false)}} userId={user?.id} />
         <Footer/>
     </div>
   );

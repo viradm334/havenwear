@@ -25,6 +25,8 @@ export default function ChatBox({ role, isOpen, onClose, userId }) {
   }, [userInput]);
 
   useEffect(() => {
+    if (!userId) return;
+    
     const channel = pusherClient.subscribe(`chat-${userId}`);
     console.log(userId);
 
@@ -34,7 +36,11 @@ export default function ChatBox({ role, isOpen, onClose, userId }) {
     
     channel.bind("pusher:subscription_error", (status) => {
       console.error("Subscription failed:", status);
-    });    
+    });   
+    
+    channel.bind("test-event", (data) => {
+      console.log("Event hit!", data.note)
+    })
         
   
     channel.bind("new-message", (data) => {
@@ -49,7 +55,7 @@ export default function ChatBox({ role, isOpen, onClose, userId }) {
       channel.unbind_all();
       channel.unsubscribe();
     };
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
     if (!userId) return;
