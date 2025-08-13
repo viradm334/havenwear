@@ -12,6 +12,8 @@ export default function ChatBox({ role, isOpen, onClose, userId }) {
   const [userInput, setUserInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [targetUserId, setTargetUserId] = useState(null);
+  const [chatPartnerName, setChatPartnerName] = useState(null);
+  const [chatList, setChatList] = useState([]);
   const textareaRef = useRef(null);
 
   useEffect(() => {
@@ -24,8 +26,19 @@ export default function ChatBox({ role, isOpen, onClose, userId }) {
 
   useEffect(() => {
     const channel = pusherClient.subscribe(`chat-${userId}`);
+    console.log(userId);
+
+    channel.bind("pusher:subscription_succeeded", () => {
+      console.log("Successfully subscribed to channel:", channel.name);
+    });
+    
+    channel.bind("pusher:subscription_error", (status) => {
+      console.error("Subscription failed:", status);
+    });    
+        
   
     channel.bind("new-message", (data) => {
+      console.log("Received new-message:", data);
       setMessages((prev) => {
         const exists = prev.some((msg) => msg.id === data.id);
         return exists ? prev : [...prev, data];
@@ -46,18 +59,21 @@ export default function ChatBox({ role, isOpen, onClose, userId }) {
         .then((res) => res.json())
         .then((data) => setMessages(data.messages));
     }else if(role === 'ADMIN'){
-      fetch(`/api/chat/admin/${userId}`)
+      fetch(`/api/chat/admin/messages`)
         .then((res) => res.json())
-        .then((data) => setMessages(data.messages));
+        .then((data) => setChatList(data.latestMessages));
     }
   }, [userId]);
 
   if (!isOpen) return null;
 
-  const dummyUsers = Array.from({ length: 20 }, (_, i) => ({
-    name: `User ${i + 1}`,
-    message: `This is a message from user ${i + 1}`,
-  }));
+  const getConversationWithUser = async(id) => {
+    const res = await fetch(`/api/chat/admin/${id}`);
+    const data = await res.json();
+    setMessages(data.messages);
+    setTargetUserId(id);
+    setChatPartnerName(data.chatPartnerName);
+  }
 
   const handleSubmit = async(e) => {
     e.preventDefault();
@@ -128,12 +144,12 @@ export default function ChatBox({ role, isOpen, onClose, userId }) {
           {/* Chat List */}
           {role === "ADMIN" && (
             <div className="chat-list w-1/3 h-full outline-1 outline-gray-300 flex flex-col overflow-y-auto">
-              {dummyUsers.map((user, index) => (
-                <UserBox
+              {chatList.map((chat, index) => (
+                <UserBox onClick={() => getConversationWithUser(chat.senderId)}
                   key={index}
                   imageUrl={"/placeholder.jpg"}
-                  username={user.name}
-                  latestMessage={user.message}
+                  username={chat.sender.name}
+                  latestMessage={chat.content}
                 />
               ))}
             </div>
@@ -147,7 +163,7 @@ export default function ChatBox({ role, isOpen, onClose, userId }) {
           >
             {/* Receiver Info */}
             <div className="receiver-box h-[8%] outline-1 outline-gray-300 text-xs text-gray-800 font-semibold p-2 truncate">
-              {role === 'USER' ? 'Admin' : 'Username'}
+              {role === 'USER' ? 'Admin' : chatPartnerName}
             </div>
 
             {/* Messages */}

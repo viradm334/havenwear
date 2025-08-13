@@ -34,13 +34,18 @@ export async function POST(req) {
       },
     });
 
+    console.log(receiverId);
+
     if (senderId !== receiverId) {
-        await pusher.trigger(`chat-${receiverId}`, "new-message", {
-          senderId,
-          content,
-          created_at: chat.created_at,
-        });
-      }      
+      await pusher.trigger(`chat-${receiverId}`, "new-message", {
+        id: chat.id,
+        receiverId,
+        senderId,
+        content,
+        created_at: chat.created_at,
+        updated_at: chat.updated_at,
+      });
+    }
 
     return Response.json({
       message: "Successfully sent message!",

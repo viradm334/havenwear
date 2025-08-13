@@ -8,6 +8,14 @@ export async function GET(req, { params }) {
     });
 
     const adminId = admin?.id;
+    const chatPartner = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        name: true
+      }
+    });
+
+    const chatPartnerName = chatPartner?.name;
 
     const messages = await prisma.message.findMany({
       where: {
@@ -16,13 +24,14 @@ export async function GET(req, { params }) {
           { senderId: adminId, receiverId: userId },
         ],
       },
-      orderBy: { created_at: "desc" },
+      orderBy: { created_at: "asc" },
     });
 
     return Response.json({
       message: "Successfully fetched conversation between admin and user!",
       success: true,
       messages,
+      chatPartnerName
     });
   } catch (err) {
     console.error(err.message);

@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 
-export default function UserBox({ username, latestMessage, imageUrl }) {
+export default function UserBox({ username, latestMessage, imageUrl, onClick }) {
   return (
-    <div className="user-box w-full flex items-center gap-3 p-2 border-b border-gray-200">
+    <div className="user-box w-full flex items-center gap-3 p-2 border-b border-gray-200 cursor-pointer hover:bg-gray-200" onClick={onClick}>
       <div className="user-avatar w-[40px] h-[40px] shrink-0">
         <Image
           src={imageUrl}

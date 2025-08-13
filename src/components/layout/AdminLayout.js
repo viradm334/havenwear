@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import ChatBox from "../ui/ChatBox";
 
 export default function AdminLayout({ title = "Dashboard", children }) {
-  const [user, setUser] = useState([]);
+  const [user, setUser] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -14,6 +14,8 @@ export default function AdminLayout({ title = "Dashboard", children }) {
       .then((res) => res.json())
       .then((data) => setUser(data.user));
   }, []);
+
+  if (!user) return null;
 
   return (
     <div className="flex">
