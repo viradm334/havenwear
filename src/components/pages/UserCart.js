@@ -48,15 +48,67 @@ export default function UserCart() {
     }
   };
 
-  const addQuantity = () => {
-    setQuantity(quantity + 1);
+  const addQuantity = async (cartItemId, quantity) => {
+    try{
+      const addedQty = quantity + 1;
+      const res = await fetch(`/api/cart/update-quantity/${cartItemId}`, {
+        method: 'PATCH',
+        body: JSON.stringify({quantity: addedQty})
+      });
+
+      const data = await res.json();
+
+      if(res.ok){
+        window.location.reload();
+      }else{
+        console.error(data.message);
+      }
+    }catch(err){
+      console.error(err.message);
+    }
   };
 
-  const decreaseQuantity = () => {
-    if (quantity === 1) {
-      return;
-    } else {
-      setQuantity(quantity - 1);
+  const decreaseQuantity = async (cartItemId, quantity) => {
+      if(quantity === 1){
+      const confirmed = confirm("Apa anda mau menghapus item ini dari keranjang?");
+
+      if(confirmed){
+        try{
+          const res = await fetch(`/api/cart/delete-item/${cartItemId}`, {
+            method: "DELETE",
+          });
+    
+          const data = await res.json();
+    
+          if (res.ok) {
+            alert(data.message);
+            window.location.reload();
+          } else {
+            console.error(data.message);
+            alert(data.message);
+          }
+        }catch(err){
+          console.error(err.message);
+        }
+      }
+    }else {
+      try{
+        const decreasedQty = quantity - 1;
+        const res = await fetch(`/api/cart/update-quantity/${cartItemId}`, {
+          method: 'PATCH',
+          body: JSON.stringify({quantity: decreasedQty})
+        });
+  
+        const data = await res.json();
+  
+        if(res.ok){
+          window.location.reload();
+        }else{
+          console.error(data.message);
+        }
+      }catch(err){
+        console.error(err.message);
+      }
     }
   };
 
@@ -94,7 +146,7 @@ export default function UserCart() {
                   <div className="qty-box flex w-2/3 h-9 items-center">
                     <button
                       type="button"
-                      onClick={decreaseQuantity}
+                      onClick={() => {decreaseQuantity(item.id, item.quantity)}}
                       className="outline-1 outline-gray-400 w-8 h-8 flex justify-center items-center font-bold"
                     >
                       −
@@ -104,7 +156,7 @@ export default function UserCart() {
                     </div>
                     <button
                       type="button"
-                      onClick={addQuantity}
+                      onClick={() => {addQuantity(item.id, item.quantity)}}
                       className="outline-1 outline-gray-400 w-8 h-8 flex justify-center items-center font-bold"
                     >
                       +
