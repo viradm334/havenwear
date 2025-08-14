@@ -26,7 +26,7 @@ export default function AdminLayout({ title = "Dashboard", children }) {
         </header>
         {children}
       </main>
-      <ChatBox role={"ADMIN"} isOpen={isOpen} onClose={() => {setIsOpen(false)}} userId={user.id} />
+      <ChatBox role={"ADMIN"} isOpen={isOpen} onClose={() => {setIsOpen(false)}} userId={user?.id} />
     </div>
   );
 }

@@ -45,7 +45,7 @@ export default function LoginForm() {
         alert(`Error: ${data.message}`);
       }
     } catch (err) {
-      alert(err);
+      alert(err.message);
       console.error(err);
     }
   };

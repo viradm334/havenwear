@@ -168,7 +168,7 @@ export default function ChatBox({ role, isOpen, onClose, userId }) {
             }`}
           >
             {/* Receiver Info */}
-            <div className="receiver-box h-[8%] outline-1 outline-gray-300 text-xs text-gray-800 font-semibold p-2 truncate">
+            <div className="receiver-box h-[10%] outline-1 outline-gray-300 text-xs text-gray-800 font-semibold p-2 truncate">
               {role === 'USER' ? 'Admin' : chatPartnerName}
             </div>
 

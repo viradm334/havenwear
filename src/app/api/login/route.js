@@ -20,7 +20,7 @@ export async function POST(req) {
 
   if (!passwordMatch) {
     return Response.json(
-      { messsage: "Wrong email or password!" },
+      { message: "Wrong email or password!" },
       { status: 401 }
     );
   }

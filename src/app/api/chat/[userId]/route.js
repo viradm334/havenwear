@@ -5,7 +5,7 @@ export async function GET(req, {params}){
     try{
         const {userId} = await params;
 
-        pusher.trigger(`chat-045317fb-e5e6-4e7e-80e0-0949cefdf980`, "test-event", {note: 'Hello world'});
+        pusher.trigger(`chat-${userId}`, "test-event", {note: 'Hello world'});
        
 
         return Response.json({message: "Successfully hit event"});
