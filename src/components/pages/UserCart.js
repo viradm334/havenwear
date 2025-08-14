@@ -62,9 +62,9 @@ export default function UserCart() {
 
   return (
     <div className="main flex">
-      <div className="flex flex-col p-5 w-5/6">
+      <div className="flex flex-col p-5 w-full">
         {cartItems.length !== 0 ? (
-          <div>
+          <div className="flex flex-col">
             {cartItems.map((item) => (
               <div
                 key={item.id}
@@ -116,19 +116,23 @@ export default function UserCart() {
                 </div>
               </div>
             ))}
+            <div className="flex justify-center">
             <Link
               href={"/checkout"}
-              className="text-white text-center bg-emerald-800 rounded hover:bg-emerald-900 w-full px-3 py-2 mt-4 cursor-pointer"
+              className="text-white text-center bg-emerald-800 rounded hover:bg-emerald-900 px-3 py-2 mt-4 cursor-pointer"
             >
               Check Out
             </Link>
+            </div>
           </div>
         ) : (
-          <div>
-            <p className="mb-3 text-center">Cart is Empty</p>
+          <div className="flex flex-col items-center justify-center py-10">
+            <p className="mb-3 text-center text-lg font-medium text-gray-700">
+              Cart is Empty
+            </p>
             <Link
-              href={"/"}
-              className="text-white text-center bg-emerald-800 rounded hover:bg-emerald-900 w-full px-3 py-2 mt-4 cursor-pointer"
+              href="/"
+              className="text-white bg-emerald-800 hover:bg-emerald-900 rounded px-4 py-2 w-40 text-center"
             >
               Shop Now
             </Link>

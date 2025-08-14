@@ -35,55 +35,58 @@ export default function ProductDetails({ user }) {
       .then((data) => setIsWishListed(data.wishlisted));
   }, [user, product]);
 
-  const addToWishList = async(productId) => {
-    if(!user){
-      router.push('/login');
+  const addToWishList = async (productId) => {
+    if (!user) {
+      router.push("/login");
       return;
     }
 
-    try{
+    try {
       const res = await fetch(`/api/wishlist/create`, {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify({
           userId: user.id,
-          productId: productId
-        })
+          productId: productId,
+        }),
       });
 
       const data = await res.json();
 
-      if(res.ok){
+      if (res.ok) {
         setIsWishListed(true);
-      }else{
+      } else {
         console.error(data.message);
       }
-    }catch(err){
+    } catch (err) {
       console.error(err.message);
     }
-  }
+  };
 
-  const deleteFromWishList = async(productId) => {
-    if(!user){
-      router.push('/login');
+  const deleteFromWishList = async (productId) => {
+    if (!user) {
+      router.push("/login");
       return;
     }
 
-    try{
-      const res = await fetch(`/api/wishlist/delete?userId=${user.id}&productId=${productId}`, {
-        method: 'DELETE',
-      });      
+    try {
+      const res = await fetch(
+        `/api/wishlist/delete?userId=${user.id}&productId=${productId}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       const data = await res.json();
 
-      if(res.ok){
+      if (res.ok) {
         setIsWishListed(false);
-      }else{
+      } else {
         console.error(data.message);
       }
-    }catch(err){
+    } catch (err) {
       console.error(err.message);
     }
-  }
+  };
 
   const addQuantity = () => {
     setQuantity(quantity + 1);
@@ -100,8 +103,8 @@ export default function ProductDetails({ user }) {
   const insertCartItem = async (e) => {
     e.preventDefault();
 
-    if(!user){
-      router.push('/login');
+    if (!user) {
+      router.push("/login");
       return;
     }
 
@@ -171,19 +174,28 @@ export default function ProductDetails({ user }) {
 
             {/* Size Selector */}
             <div className="sizes-box flex flex-wrap gap-2">
-              {product?.productSizes.map((size, index) => (
-                <button
-                  key={index}
-                  onClick={() => setSize(size.id)}
-                  className={`px-4 py-2 rounded border ${
-                    selectedSize === size.id
-                      ? "bg-gray-800 text-white"
-                      : "bg-white text-gray-800 hover:bg-gray-100"
-                  }`}
-                >
-                  {size.name}
-                </button>
-              ))}
+              {product?.productSizes.map((size, index) => {
+                const isOutOfStock = size.stock < 1;
+                const isSelected = selectedSize === size.id;
+
+                return (
+                  <button
+                    key={index}
+                    onClick={() => !isOutOfStock && setSize(size.id)}
+                    disabled={isOutOfStock}
+                    className={`px-4 py-2 rounded border transition-colors duration-200
+        ${
+          isSelected
+            ? "bg-gray-800 text-white"
+            : "bg-white text-gray-800 hover:bg-gray-100"
+        }
+        ${isOutOfStock ? "opacity-50 cursor-not-allowed hover:bg-white" : ""}
+      `}
+                  >
+                    {size.name}
+                  </button>
+                );
+              })}
             </div>
 
             <div className="flex items-center gap-4">
@@ -207,11 +219,11 @@ export default function ProductDetails({ user }) {
                 title={
                   isWishlisted ? "Remove from Wishlist" : "Add to Wishlist"
                 }
-
                 onClick={() => {
-                  isWishlisted ? deleteFromWishList(product.id) : addToWishList(product.id);
+                  isWishlisted
+                    ? deleteFromWishList(product.id)
+                    : addToWishList(product.id);
                 }}
-                
               >
                 <HeartIcon className="w-6 h-6" />
               </button>
