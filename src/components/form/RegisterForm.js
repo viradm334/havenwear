@@ -45,7 +45,7 @@ export default function RegisterForm() {
 
   return (
     <div className="flex flex-col p-10 outline-gray-300 rounded bg-white outline-1 shadow-md w-1/3">
-      <h1 className="font-bold text-2xl text-center text-emerald-600 mb-5 underline underline-offset-8 decoration-2">
+      <h1 className="font-bold text-2xl text-center text-emerald-600 mb-5">
         Register
       </h1>
       <form className="flex flex-col" onSubmit={handleSubmit}>

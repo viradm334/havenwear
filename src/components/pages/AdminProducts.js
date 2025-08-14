@@ -8,7 +8,7 @@ export default function AdminProducts() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    fetch("/api/products")
+    fetch("/api/products/admin")
       .then((res) => res.json())
       .then((item) => setProducts(item.data));
   }, []);
@@ -29,6 +29,7 @@ export default function AdminProducts() {
             <th className="border border-gray-300 p-2">Category</th>
             <th className="border border-gray-300 p-2">Stock</th>
             <th className="border border-gray-300 p-2">Products Sold</th>
+            <th className="border border-gray-300 p-2">Status</th>
             <th className="border border-gray-300 p-2">Action</th>
           </tr>
         </thead>
@@ -46,6 +47,9 @@ export default function AdminProducts() {
               </td>
               <td className="border border-gray-300 p-2">
                 {product.totalSold}
+              </td>
+              <td className="border border-gray-300 p-2">
+                {product.status}
               </td>
               <td className="border border-gray-300 p-2">
                 <Link href={`/admin/products/${product.slug}`} className="outline-none bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md">

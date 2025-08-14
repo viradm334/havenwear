@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 export async function GET(req){
     try{
         const products = await prisma.product.findMany({
+            where: {status: 'PUBLISHED'},
             select: {
                 id: true,
                 name: true,
@@ -33,17 +34,12 @@ export async function GET(req){
 
         const enrichedProducts = products.map(product => {
             const totalStock = product.productSizes.reduce((sum, size) => sum + size.stock, 0);
-            const totalSold = product.productSizes.reduce((sum, size) => {
-              const sizeSold = size.orderItems.reduce((qtySum, item) => qtySum + item.quantity, 0);
-              return sum + sizeSold;
-            }, 0);
           
             return {
               ...product,
-              totalStock,
-              totalSold
+              totalStock
             };
-          });
+          }).filter(product => product.totalStock > 0);
                     
         return Response.json({message: 'Succesfully retrieved all products!', data: enrichedProducts});
     }catch(err){

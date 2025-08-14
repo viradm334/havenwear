@@ -50,6 +50,7 @@ model Product {
   description String? @db.LongText
   color String
   price Float
+  status ProductStatus @default(PUBLISHED)
   productSizes ProductSize[]
   productPhotos ProductPhoto[]
   wishlist Wishlist[]
@@ -199,4 +200,9 @@ enum ComplaintStatus {
   CANCELED
   REVIEWED
   RESOLVED
+}
+
+enum ProductStatus {
+  ARCHIVED
+  PUBLISHED
 }

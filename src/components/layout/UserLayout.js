@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Sidebar from "../nav/Sidebar";
 import { useState, useEffect } from "react";
 import Navbar from "../nav/Navbar";
 import Footer from "../nav/Footer";
@@ -20,9 +19,9 @@ export default function UserLayout({ title = "Home", children }) {
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar user={user} onToggleChat={() => setIsOpen((prev) => !prev)}  />
-        <main className="flex-grow max-w-6xl p-6">
+        <main className="flex-grow w-full p-6">
           <header className="mb-3">
-            <h1 className="text-2xl font-semibold text-gray-700">{title}</h1>
+            <h1 className="text-2xl font-semibold text-gray-700 text-center">{title}</h1>
           </header>
           {React.cloneElement(children, { user })}
         </main>
