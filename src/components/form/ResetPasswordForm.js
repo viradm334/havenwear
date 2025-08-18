@@ -2,13 +2,17 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 
 export default function ResetPasswordForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email");
+  const token = searchParams.get("token");
   const [formData, setFormData] = useState({
-    new_password: "",
-    confirm_password: ""
+    newPassword: "",
+    confirmPassword: ""
   });
 
   const handleChange = (e) => {
@@ -18,8 +22,11 @@ export default function ResetPasswordForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    formData.email = email;
+    formData.token = token;
+
     try {
-      const res = await fetch("/api/login", {
+      const res = await fetch("/api/reset-password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -32,15 +39,10 @@ export default function ResetPasswordForm() {
       if (res.ok) {
         alert(`${data.message}`);
         setFormData({
-          email: "",
-          password: "",
+          newPassword: "",
+          confirmPassword: ""
         });
-
-        if(data.role === 'ADMIN'){
-          router.push('/admin');
-        }else{
-          router.push('/');
-        }
+        router.push("/login");
       } else {
         alert(`Error: ${data.message}`);
       }
@@ -61,10 +63,10 @@ export default function ResetPasswordForm() {
         </label>
         <input
           type="password"
-          name="new_password"
+          name="newPassword"
           className="outline-1 outline-gray-400 rounded-sm mb-3 p-1.5 placeholder:text-sm placeholder:text-normal focus:outline-emerald-600"
           placeholder="Enter your new password"
-          value={formData.new_password}
+          value={formData.newPassword}
           onChange={handleChange}
         />
         <label className="text-sm text-emerald-700 font-bold mb-1.5">
@@ -72,10 +74,10 @@ export default function ResetPasswordForm() {
         </label>
         <input
           type="password"
-          name="confirm_password"
+          name="confirmPassword"
           className="outline-1 outline-gray-400 rounded-sm mb-6 p-1.5 placeholder:text-sm placeholder:text-normal focus:outline-emerald-600"
           placeholder="Enter your email here"
-          value={formData.confirm_password}
+          value={formData.confirmPassword}
           onChange={handleChange}
         />
         <button className="bg-emerald-600 outline-none rounded-md w-full text-white font-bold px-1 py-2 cursor-pointer hover:bg-emerald-700 transition" type="submit">

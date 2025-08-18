@@ -2,10 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 export default function ForgotPasswordForm() {
-  const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
   });
@@ -18,7 +16,7 @@ export default function ForgotPasswordForm() {
     e.preventDefault();
 
     try {
-      const res = await fetch("/api/login", {
+      const res = await fetch("/api/forgot-password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -32,14 +30,7 @@ export default function ForgotPasswordForm() {
         alert(`${data.message}`);
         setFormData({
           email: "",
-          password: "",
         });
-
-        if(data.role === 'ADMIN'){
-          router.push('/admin');
-        }else{
-          router.push('/');
-        }
       } else {
         alert(`Error: ${data.message}`);
       }

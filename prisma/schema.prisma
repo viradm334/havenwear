@@ -24,6 +24,8 @@ model User {
   city String?
   province String?
   phoneNumber String?
+  resetToken String?
+  resetTokenExpiryTime DateTime?
   sentMessages Message[] @relation("SentMessages")
   receivedMessages Message[] @relation("ReceivedMessages")
   cart Cart?

@@ -36,10 +36,10 @@ export default function LoginForm() {
           password: "",
         });
 
-        if(data.role === 'ADMIN'){
-          router.push('/admin');
-        }else{
-          router.push('/');
+        if (data.role === "ADMIN") {
+          router.push("/admin");
+        } else {
+          router.push("/");
         }
       } else {
         alert(`Error: ${data.message}`);
@@ -67,9 +67,21 @@ export default function LoginForm() {
           value={formData.email}
           onChange={handleChange}
         />
-        <label className="text-sm text-emerald-700 font-bold mb-1.5">
-          Password
-        </label>
+        <div className="flex justify-between items-center mb-1.5">
+          <label
+            htmlFor="password"
+            className="text-sm text-emerald-700 font-bold"
+          >
+            Password
+          </label>
+          <Link
+            href="/forgot-password"
+            className="text-xs text-gray-700 font-light"
+          >
+            Forgot Password?
+          </Link>
+        </div>
+
         <input
           type="password"
           name="password"
@@ -88,7 +100,10 @@ export default function LoginForm() {
             Register
           </Link>
         </p>
-        <button className="bg-emerald-600 outline-none rounded-md w-full text-white font-bold px-1 py-2 cursor-pointer hover:bg-emerald-700 transition" type="submit">
+        <button
+          className="bg-emerald-600 outline-none rounded-md w-full text-white font-bold px-1 py-2 cursor-pointer hover:bg-emerald-700 transition"
+          type="submit"
+        >
           Login
         </button>
       </form>
