@@ -24,6 +24,14 @@ export default function UserCart() {
     }
   }, [cart]);
 
+  const updateQuantity = (itemId, newQty) => {
+    setCartItems((prev) =>
+      prev.map((item) =>
+        item.id === itemId ? { ...item, quantity: newQty } : item
+      )
+    );
+  };  
+
   const handleDelete = async (id) => {
     const confirmed = confirm(
       "Apa anda yakin untuk menghapus barang dari keranjang?"
@@ -59,7 +67,7 @@ export default function UserCart() {
       const data = await res.json();
 
       if(res.ok){
-        window.location.reload();
+        updateQuantity(cartItemId, addedQty);
       }else{
         console.error(data.message);
       }
@@ -102,7 +110,7 @@ export default function UserCart() {
         const data = await res.json();
   
         if(res.ok){
-          window.location.reload();
+          updateQuantity(cartItemId, decreasedQty);
         }else{
           console.error(data.message);
         }
@@ -141,6 +149,9 @@ export default function UserCart() {
                   <h5 className="text-gray-800 font-semibold mb-2">
                     {formatCurrency(item.productSize.product.price)}
                   </h5>
+                  <h4 className="font-medium text-sm text-slate-700">
+                    Ukuran: {item.productSize.name}
+                  </h4>
 
                   {/* Qty Box directly below price */}
                   <div className="qty-box flex w-2/3 h-9 items-center">
