@@ -25,7 +25,7 @@ export default function ProductDetails({ user }) {
   useEffect(() => {
     fetch(`/api/products/${slug}`)
       .then((res) => res.json())
-      .then((pd) => setProduct(pd.data));
+      .then((data) => setProduct(data.product));
   }, [slug]);
 
   useEffect(() => {

@@ -23,6 +23,17 @@ export async function POST(req) {
         where: { id: { in: sizeIds } },
         include: { product: true },
       });
+
+      for (const size of productSizes) {
+        const record = productSizeRecords.find((p) => p.id === size.productSizeId);
+        if (!record) {
+          throw new Error(`Size not found: ${size.productSizeId}`);
+        }
+        if (record.stock < size.quantity) {
+          throw new Error(`Stok untuk ukuran ${record.name} tidak mencukupi`);
+        }
+      }
+          
     
       const order = await tx.order.create({
         data: {

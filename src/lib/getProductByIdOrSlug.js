@@ -17,6 +17,11 @@ export async function getProductByIdOrSlug(identifier) {
           thumbnail: true,
         },
       },
+      category: {
+        select: {
+          name: true
+        }
+      }
     },
   });
 

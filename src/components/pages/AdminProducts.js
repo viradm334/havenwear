@@ -52,8 +52,8 @@ export default function AdminProducts() {
                 {product.status}
               </td>
               <td className="border border-gray-300 p-2">
-                <Link href={`/admin/products/${product.slug}`} className="outline-none bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md">
-                Details
+                <Link href={`/admin/product/edit/${product.slug}`} className="outline-none bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md">
+                Edit
                 </Link>
               </td>
             </tr>
