@@ -18,7 +18,7 @@ export default function UserOrders({ user }) {
   return (
     <div className="flex flex-wrap gap-6">
       {orders.map((order) => {
-        const item = order.orderItems[0]; // ✅ Only show the first item
+        const item = order.orderItems[0];
   
         return (
           <div

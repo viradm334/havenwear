@@ -40,14 +40,23 @@ export default function UserHome() {
       <div className="flex flex-wrap justify-start mt-3 mb-6 p-10">
         {products.map((product, index) => (
           <Link href={`/${product.slug}`} key={product.id}>
-            <div className="outline-1 outline-gray-300 rounded m-2 w-[250px] h-[250px] flex flex-col">
-              <Image
-                src={"/placeholder.jpg"}
-                width={250}
-                height={150}
-                alt="product-image"
-                className="object-cover"
-              />
+            {/* Image section */}
+            <div className="outline-1 outline-gray-300 rounded m-2 w-[250px] h-[250px] flex flex-col overflow-hidden">
+              {/* Image section */}
+              <div className="relative w-full h-[150px]">
+                <Image
+                  src={
+                    product.productPhotos.length > 0
+                      ? product.productPhotos[0].imageUrl
+                      : "/placeholder.jpg"
+                  }
+                  fill
+                  alt="product-image"
+                  className="object-cover"
+                />
+              </div>
+
+              {/* product title and price section */}
               <div className="flex flex-col justify-between flex-grow p-2">
                 <div className="product-title max-w-44">
                   <h4 className="font-medium text-md text-slate-700 mb-1">

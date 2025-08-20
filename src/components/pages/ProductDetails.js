@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import Image from "next/image";
 import { HeartIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 export default function ProductDetails({ user }) {
   const [quantity, setQuantity] = useState(1);
@@ -14,6 +15,7 @@ export default function ProductDetails({ user }) {
   const [isWishlisted, setIsWishListed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [sortedSizes, setSortedSizes] = useState([]);
+  const [currentPhoto, setCurrentPhoto] = useState("/placeholder.jpg");
   const params = useParams();
   const { slug } = params;
   const router = useRouter();
@@ -30,11 +32,18 @@ export default function ProductDetails({ user }) {
       .then((res) => res.json())
       .then((data) => {
         setProduct(data.product);
-        setIsLoading(false);
-        setSortedSizes(data.product.productSizes.sort((a,b) => {
-          return sizeOrder.indexOf(a.name.toUpperCase()) - sizeOrder.indexOf(b.name.toUpperCase());
+        setSortedSizes(
+          data.product.productSizes.sort((a, b) => {
+            return (
+              sizeOrder.indexOf(a.name.toUpperCase()) -
+              sizeOrder.indexOf(b.name.toUpperCase())
+            );
+          })
+        );
+        if(data.product.productPhotos.length > 0){
+          setCurrentPhoto(data.product.productPhotos[0].imageUrl);
         }
-        ))
+        setIsLoading(false);
       });
   }, [slug]);
 
@@ -162,19 +171,46 @@ export default function ProductDetails({ user }) {
       <div className="main w-full flex justify-center items-center">
         <div className="max-w-6xl w-full p-5 flex flex-col md:flex-row gap-8">
           {/* Product Image */}
-          <div className="img w-full md:w-1/2 flex justify-center items-center">
+          <div className="img w-full md:w-1/2 flex-col flex justify-center items-center">
             <Image
-              src="/placeholder.jpg"
-              height={800}
-              width={700}
+              src={currentPhoto}
+              height={400}
+              width={300}
               alt="product-image"
-              className="rounded-lg object-cover"
+              className="rounded-lg object-cover mb-2"
             />
+            {/* Other Images */}
+            <div className="flex gap-3">
+              {product.productPhotos.length === 0 ? (
+                <Image
+                  src="/placeholder.jpg"
+                  height={100}
+                  width={100}
+                  alt="placeholder-image"
+                  className="rounded-lg object-cover"
+                />
+              ) : (
+                product.productPhotos.map((img, index) => (
+                  <Image
+                    key={index}
+                    src={img.imageUrl}
+                    height={50}
+                    width={50}
+                    alt="product-image"
+                    className="rounded-lg object-cover cursor-pointer"
+                    onClick={() => setCurrentPhoto(img.imageUrl)}
+                  />
+                ))
+              )}
+            </div>
           </div>
 
           {/* Product Details */}
           <div className="product-details w-full md:w-1/2 flex flex-col gap-3">
             <h1 className="text-2xl font-semibold">{product?.name}</h1>
+            <h1 className="text-md font-semibold text-emerald-600">
+              {formatCurrency(product?.price)}
+            </h1>
 
             {/* Quantity Selector */}
             <h1 className="text-gray-700">Jumlah</h1>

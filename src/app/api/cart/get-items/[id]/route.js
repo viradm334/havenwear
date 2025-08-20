@@ -19,7 +19,12 @@ export async function GET(req, {params}){
                                 name: true,
                                 slug: true,
                                 price: true,
-                                color: true
+                                color: true,
+                                productPhotos: {
+                                    select: {
+                                        imageUrl: true
+                                    }
+                                }
                             }
                         }
                     }

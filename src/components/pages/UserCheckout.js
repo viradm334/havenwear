@@ -204,13 +204,19 @@ export default function UserCheckout({ user }) {
                 className="outline-1 outline-gray-300 rounded p-3 w-full flex gap-4"
               >
                 {/* Image Section */}
-                <Link href={`/${item.slug}`}>
-                  <Image
-                    src="/placeholder.jpg"
-                    width={300}
-                    height={300}
-                    alt="item-image"
-                  />
+                <Link href={`/${item.productSize.product.slug}`}>
+                  <div className="relative w-[200px] h-[150px]">
+                    <Image
+                      src={
+                        item.productSize.product.productPhotos.length > 0
+                          ? item.productSize.product.productPhotos[0].imageUrl
+                          : "/placeholder.jpg"
+                      }
+                      fill
+                      alt="item-image"
+                      className="object-cover"
+                    />
+                  </div>
                 </Link>
 
                 {/* Info + Qty Section */}

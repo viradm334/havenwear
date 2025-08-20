@@ -145,13 +145,19 @@ export default function UserCart() {
                 className="outline-1 outline-gray-300 rounded p-3 mb-3 w-full flex gap-4 shadow-sm"
               >
                 {/* Image Section */}
-                <Link href={`/${item.slug}`}>
-                  <Image
-                    src="/placeholder.jpg"
-                    width={300}
-                    height={300}
-                    alt="item-image"
-                  />
+                <Link href={`/${item.productSize.product.slug}`}>
+                  <div className="relative w-[200px] h-[150px]">
+                    <Image
+                      src={
+                        item.productSize.product.productPhotos.length > 0
+                          ? item.productSize.product.productPhotos[0].imageUrl
+                          : "/placeholder.jpg"
+                      }
+                      fill
+                      alt="item-image"
+                      className="object-cover"
+                    />
+                  </div>
                 </Link>
 
                 {/* Info + Qty Section */}
@@ -231,13 +237,21 @@ export default function UserCart() {
           )}
         </h1>
         <div className="flex justify-center">
-          {cartItems.length > 0 ? (          <Link
-            href={"/checkout"}
-            className="text-white text-center bg-emerald-800 rounded hover:bg-emerald-900 px-3 py-2 mt-4 cursor-pointer w-full"
-          >
-            Check Out
-          </Link>): (<button className="text-white text-center bg-gray-300 rounded px-3 py-2 mt-4 w-full" disabled>Checkout</button>)}
-
+          {cartItems.length > 0 ? (
+            <Link
+              href={"/checkout"}
+              className="text-white text-center bg-emerald-800 rounded hover:bg-emerald-900 px-3 py-2 mt-4 cursor-pointer w-full"
+            >
+              Check Out
+            </Link>
+          ) : (
+            <button
+              className="text-white text-center bg-gray-300 rounded px-3 py-2 mt-4 w-full"
+              disabled
+            >
+              Checkout
+            </button>
+          )}
         </div>
       </div>
     </div>
