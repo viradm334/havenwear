@@ -6,10 +6,11 @@ import { formatCurrency } from "@/utils/formatCurrency";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-export default function UserCheckout({user}) {
+export default function UserCheckout({ user }) {
   const router = useRouter();
   const [cart, setCart] = useState(null);
   const [cartItems, setCartItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -17,7 +18,7 @@ export default function UserCheckout({user}) {
     city: "",
     province: "",
     phoneNumber: "",
-    paymentMethod: ''
+    paymentMethod: "",
   });
 
   useEffect(() => {
@@ -38,7 +39,7 @@ export default function UserCheckout({user}) {
     if (user?.id) {
       fetch(`/api/auth/data/${user.id}`)
         .then((res) => res.json())
-        .then((item) =>
+        .then((item) => {
           setFormData({
             name: item.user.name,
             address: item.user.address,
@@ -46,8 +47,9 @@ export default function UserCheckout({user}) {
             phoneNumber: item.user.phoneNumber,
             city: item.user.city,
             province: item.user.province,
-          })
-        );
+          });
+          setIsLoading(false);
+        });
     }
   }, [cart]);
 
@@ -60,32 +62,43 @@ export default function UserCheckout({user}) {
     formData.userId = user.id;
     formData.cartId = cart.id;
     formData.productSizes = cartItems;
-    try{
-        const res = await fetch('/api/checkout', {
-            method: 'POST',
-            body: JSON.stringify(formData)
-        });
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        body: JSON.stringify(formData),
+      });
 
-        const data = await res.json();
+      const data = await res.json();
 
-        if(res.ok){
-            alert(data.message);
-            router.push('/user/orders')
-        }else{
-            alert(data.message);
-            console.error(data.message);
-        }
-    }catch(err){
-        alert(err.message);
-        console.error(err.message);
+      if (res.ok) {
+        alert(data.message);
+        router.push("/user/orders");
+      } else {
+        alert(data.message);
+        console.error(data.message);
+      }
+    } catch (err) {
+      alert(err.message);
+      console.error(err.message);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Image src={"/loading.svg"} alt="Loading..." width={200} height={200} />
+      </div>
+    );
+  }
 
   return (
     <>
       <div className="main flex">
-        <div className="flex mt-3 p-5 w-full">
-          <form className="flex flex-col outline-1 outline-gray-300 p-5 w-1/2 rounded shadow-md" onSubmit={handleSubmit}>
+        <div className="flex p-5 w-full gap-4">
+          <form
+            className="flex flex-col outline-1 outline-gray-300 p-5 w-1/2 rounded shadow-md"
+            onSubmit={handleSubmit}
+          >
             <h1 className="font-bold mb-3 text-center">Biodata Pelanggan</h1>
             <label className="text-sm text-emerald-700 font-bold mb-1.5">
               Name
@@ -95,7 +108,7 @@ export default function UserCheckout({user}) {
               name="name"
               className="outline-1 outline-gray-400 rounded-sm mb-3 p-1.5 placeholder:text-sm placeholder:text-normal focus:outline-emerald-600"
               placeholder="Enter your name here"
-              value={formData?.name || ''}
+              value={formData?.name || ""}
               onChange={handleChange}
               required
             />
@@ -107,7 +120,7 @@ export default function UserCheckout({user}) {
               name="email"
               className="outline-1 outline-gray-400 rounded-sm mb-3 p-1.5 placeholder:text-sm placeholder:text-normal focus:outline-emerald-600"
               placeholder="Enter your name here"
-              value={formData?.email || ''}
+              value={formData?.email || ""}
               onChange={handleChange}
               required
             />
@@ -119,7 +132,7 @@ export default function UserCheckout({user}) {
               name="phoneNumber"
               className="outline-1 outline-gray-400 rounded-sm mb-3 p-1.5 placeholder:text-sm placeholder:text-normal focus:outline-emerald-600"
               placeholder="Enter your name here"
-              value={formData?.phoneNumber || ''}
+              value={formData?.phoneNumber || ""}
               onChange={handleChange}
               required
             />
@@ -162,65 +175,81 @@ export default function UserCheckout({user}) {
             <label className="text-sm text-emerald-700 font-bold mb-1.5">
               Payment Method
             </label>
-            <select name="paymentMethod" className="outline-1 outline-gray-400 focus:outline-emerald-600 rounded p-2" onChange={handleChange} value={formData?.paymentMethod || ""} required>
-                <option value={'TRANSFER'}>Transfer</option>
-                <option value={'CREDITCARD'}>Kartu Kredit</option>
-                <option value={'INDOMARET'}>Indomaret</option>
+            <select
+              name="paymentMethod"
+              className="outline-1 outline-gray-400 focus:outline-emerald-600 rounded p-2"
+              onChange={handleChange}
+              value={formData?.paymentMethod || ""}
+              required
+            >
+              <option value={"TRANSFER"}>Transfer</option>
+              <option value={"CREDITCARD"}>Kartu Kredit</option>
+              <option value={"INDOMARET"}>Indomaret</option>
             </select>
 
-            <button type="submit" className="text-white text-center bg-emerald-800 rounded hover:bg-900 w-full px-3 py-2 mt-4 cursor-pointer">Buat Pesanan</button>
-          </form>
-          <div className="flex flex-col w-1/2">
-          <h1 className="font-bold mb-3 text-center">Barang yang Dipesan</h1>
-          {cartItems.map((item) => (
-            <div
-              key={item.id}
-              className="outline-1 outline-gray-300 rounded p-3 m-2 w-full flex gap-4"
+            <button
+              type="submit"
+              className="text-white text-center bg-emerald-800 rounded hover:bg-900 w-full px-3 py-2 mt-4 cursor-pointer"
             >
-              {/* Image Section */}
-              <Link href={`/${item.slug}`}>
-                <Image
-                  src="/placeholder.jpg"
-                  width={300}
-                  height={300}
-                  alt="item-image"
-                />
-              </Link>
+              Buat Pesanan
+            </button>
+          </form>
+          <div className="flex flex-col w-1/2 p-3 gap-3">
+            <h1 className="font-bold mb-3 px-3 text-black text-md text-center">
+              Barang yang Dipesan
+            </h1>
+            {cartItems.map((item) => (
+              <div
+                key={item.id}
+                className="outline-1 outline-gray-300 rounded p-3 w-full flex gap-4"
+              >
+                {/* Image Section */}
+                <Link href={`/${item.slug}`}>
+                  <Image
+                    src="/placeholder.jpg"
+                    width={300}
+                    height={300}
+                    alt="item-image"
+                  />
+                </Link>
 
-              {/* Info + Qty Section */}
-              <div className="flex flex-col justify-between w-full">
-                {/* Title & Price */}
-                <h4 className="font-medium text-sm text-slate-700">
-                  {item.productSize.product.name}
-                </h4>
-                <h4 className="font-medium text-sm text-slate-700">
-                  {item.productSize.name}
-                </h4>
-                <h5 className="text-gray-800 font-semibold mb-2">
-                  {formatCurrency(item.productSize.product.price)}
-                </h5>
-                <h5 className="text-gray-800 font-semibold mb-2">
-                  {item.quantity}x
-                </h5>
-                <h5 className="text-gray-800 font-semibold mb-2">Subtotal</h5>
-                <h5 className="text-gray-800 font-medium mb-2">
-                  {formatCurrency(
-                    item.productSize.product.price * item.quantity
-                  )}
-                </h5>
+                {/* Info + Qty Section */}
+                <div className="flex flex-col justify-between w-full gap-1">
+                  {/* Title & Price */}
+                  <h4 className="font-bold text-md text-slate-700">
+                    {item.productSize.product.name}
+                  </h4>
+                  <h4 className="font-medium text-sm text-slate-700">
+                    Ukuran: {item.productSize.name}
+                  </h4>
+                  <h5 className="text-gray-800 text-sm font-medium">
+                    Jumlah: {item.quantity}
+                  </h5>
+                  <h5 className="text-gray-800 font-medium">
+                    Harga satuan:{" "}
+                    {formatCurrency(item.productSize.product.price)}
+                  </h5>
+                  <h5 className="text-gray-800 font-semibold">
+                    Subtotal:{" "}
+                    {formatCurrency(
+                      item.productSize.product.price * item.quantity
+                    )}
+                  </h5>
+                </div>
               </div>
+            ))}
+            <div className="flex justify-end">
+              <h1 className="font-bold text-md">
+                Total:
+                {formatCurrency(
+                  cartItems.reduce(
+                    (acc, item) =>
+                      acc + item.quantity * item.productSize.product.price,
+                    0
+                  )
+                )}
+              </h1>
             </div>
-          ))}
-          <h1 className="text-center">
-            Total:
-            {formatCurrency(
-              cartItems.reduce(
-                (acc, item) =>
-                  acc + item.quantity * item.productSize.product.price,
-                0
-              )
-            )}
-          </h1>
           </div>
         </div>
       </div>
