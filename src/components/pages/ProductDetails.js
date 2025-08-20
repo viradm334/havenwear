@@ -9,12 +9,15 @@ import { useRouter } from "next/navigation";
 export default function ProductDetails({ user }) {
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState(null);
-  const [selectedSize, setSize] = useState("");
+  const [selectedSize, setSize] = useState(null);
   const [cart, setCart] = useState(null);
   const [isWishlisted, setIsWishListed] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [sortedSizes, setSortedSizes] = useState([]);
   const params = useParams();
   const { slug } = params;
   const router = useRouter();
+  const sizeOrder = ["XS", "S", "M", "L", "XL", "XXL"];
 
   useEffect(() => {
     fetch("/api/cart")
@@ -25,7 +28,14 @@ export default function ProductDetails({ user }) {
   useEffect(() => {
     fetch(`/api/products/${slug}`)
       .then((res) => res.json())
-      .then((data) => setProduct(data.product));
+      .then((data) => {
+        setProduct(data.product);
+        setIsLoading(false);
+        setSortedSizes(data.product.productSizes.sort((a,b) => {
+          return sizeOrder.indexOf(a.name.toUpperCase()) - sizeOrder.indexOf(b.name.toUpperCase());
+        }
+        ))
+      });
   }, [slug]);
 
   useEffect(() => {
@@ -108,6 +118,11 @@ export default function ProductDetails({ user }) {
       return;
     }
 
+    if (!selectedSize) {
+      alert("Mohon pilih ukuran baju terlebih dahulu");
+      return;
+    }
+
     try {
       const res = await fetch("/api/cart/insert", {
         method: "POST",
@@ -125,6 +140,8 @@ export default function ProductDetails({ user }) {
 
       if (res.ok) {
         alert(data.message);
+        setSize(null);
+        setQuantity(1);
       }
     } catch (err) {
       alert(err);
@@ -132,10 +149,18 @@ export default function ProductDetails({ user }) {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Image src={"/loading.svg"} alt="Loading..." width={200} height={200} />
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="main w-full flex justify-center items-center">
-        <div className="max-w-6xl w-full p-6 md:p-10 flex flex-col md:flex-row gap-8">
+        <div className="max-w-6xl w-full p-5 flex flex-col md:flex-row gap-8">
           {/* Product Image */}
           <div className="img w-full md:w-1/2 flex justify-center items-center">
             <Image
@@ -148,33 +173,35 @@ export default function ProductDetails({ user }) {
           </div>
 
           {/* Product Details */}
-          <div className="product-details w-full md:w-1/2 flex flex-col gap-4">
+          <div className="product-details w-full md:w-1/2 flex flex-col gap-3">
             <h1 className="text-2xl font-semibold">{product?.name}</h1>
 
             {/* Quantity Selector */}
-            <div className="qty-box flex items-center gap-2 w-40">
+            <h1 className="text-gray-700">Jumlah</h1>
+            <div className="qty-box flex items-center w-40">
               <button
                 type="button"
                 onClick={decreaseQuantity}
-                className="w-8 h-8 border border-gray-400 rounded flex justify-center items-center font-bold"
+                className="w-8 h-8 border border-gray-300 flex justify-center items-center font-bold"
               >
                 -
               </button>
-              <div className="w-12 h-8 border border-gray-400 rounded flex justify-center items-center">
+              <div className="w-12 h-8 border border-gray-300 flex justify-center items-center">
                 {quantity}
               </div>
               <button
                 type="button"
                 onClick={addQuantity}
-                className="w-8 h-8 border border-gray-400 rounded flex justify-center items-center font-bold"
+                className="w-8 h-8 border border-gray-300 flex justify-center items-center font-bold"
               >
                 +
               </button>
             </div>
 
             {/* Size Selector */}
+            <h1 className="text-gray-700">Ukuran Tersedia</h1>
             <div className="sizes-box flex flex-wrap gap-2">
-              {product?.productSizes.map((size, index) => {
+              {sortedSizes?.map((size, index) => {
                 const isOutOfStock = size.stock < 1;
                 const isSelected = selectedSize === size.id;
 
