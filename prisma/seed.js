@@ -29,22 +29,27 @@ async function main() {
       {
         name: "tops",
         slug: "tops",
+        imageUrl: "/ctg-tops.png"
       },
       {
         name: "bottoms",
         slug: "bottoms",
+        imageUrl: "/ctg-bottoms.jpg"
       },
       {
         name: "accessories",
         slug: "accessories",
+        imageUrl: "/ctg-accessories.jpg"
       },
       {
         name: "dress",
         slug: "dress",
+        imageUrl: "/ctg-dress.jpg"
       },
       {
         name: "outerwear",
         slug: "outerwear",
+        imageUrl: "/ctg-outerwear.png"
       },
     ],
     skipDuplicates: true,
