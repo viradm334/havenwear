@@ -7,14 +7,26 @@ import Link from "next/link";
 
 export default function UserWishlist({ user }) {
   const [wishlists, setWishlists] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!user) return;
 
     fetch(`/api/wishlist/${user.id}`)
       .then((res) => res.json())
-      .then((data) => setWishlists(data.wishlist));
+      .then((data) => {
+        setWishlists(data.wishlist);
+        setIsLoading(false);
+      });
   }, [user]);
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Image src={"/loading.svg"} alt="Loading..." width={200} height={200} />
+      </div>
+    );
+  }
 
   return (
     <div className="flex mt-3">

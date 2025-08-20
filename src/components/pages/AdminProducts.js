@@ -20,7 +20,7 @@ export default function AdminProducts() {
           + Create New Product
         </button>
       </Link>
-      <table className="border-collapse border border-gray-400 w-full text-center">
+      <table className="border-collapse border border-gray-400 bg-white w-full text-center">
         <thead>
           <tr>
             <th className="border border-gray-300 p-2">No.</th>

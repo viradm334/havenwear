@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function EditProfileForm({ user }) {
-    const router = useRouter();
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -13,13 +14,14 @@ export default function EditProfileForm({ user }) {
     city: "",
     province: "",
   });
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!user?.id) return;
 
     fetch(`/api/auth/data/${user.id}`)
       .then((res) => res.json())
-      .then((data) =>
+      .then((data) => {
         setFormData({
           name: data.user.name,
           email: data.user.email,
@@ -27,8 +29,9 @@ export default function EditProfileForm({ user }) {
           address: data.user.address,
           city: data.user.city,
           province: data.user.province,
-        })
-      );
+        });
+        setIsLoading(false);
+      });
   }, [user]);
 
   const handleChange = (e) => {
@@ -38,26 +41,33 @@ export default function EditProfileForm({ user }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try{
-        const res = await fetch(`/api/edit-profile/${user.id}`, {
-            method: 'PUT',
-            body: JSON.stringify(formData)
-        });
+    try {
+      const res = await fetch(`/api/edit-profile/${user.id}`, {
+        method: "PUT",
+        body: JSON.stringify(formData),
+      });
 
-        const data = await res.json();
+      const data = await res.json();
 
-        if(res.ok){
-            alert(data.message);
-            router.push('/user/profile');
-        }else{
-            console.log(err.message);
-            alert(data.message);
-        }
-
-    }catch(err){
-        console.error(err.message);
-        alert(err.message);
+      if (res.ok) {
+        alert(data.message);
+        router.push("/user/profile");
+      } else {
+        console.log(err.message);
+        alert(data.message);
+      }
+    } catch (err) {
+      console.error(err.message);
+      alert(err.message);
     }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Image src={"/loading.svg"} alt="Loading..." width={200} height={200} />
+      </div>
+    );
   }
 
   return (

@@ -35,7 +35,7 @@ export default function AdminComplaint() {
 
   return (
     <>
-      <table className="border-collapse border border-gray-400 w-full text-center">
+      <table className="border-collapse border border-gray-400 bg-white w-full text-center">
         <thead>
           <tr>
             <th className="border border-gray-300 p-2">No.</th>
@@ -44,7 +44,7 @@ export default function AdminComplaint() {
               Produk yang Dikomplain
             </th>
             <th className="border border-gray-300 p-2">Status</th>
-            <th className="border border-gray-300 p-2">Tanggal Keluar</th>
+            <th className="border border-gray-300 p-2">Tanggal Dibuat</th>
             <th className="border border-gray-300 p-2">No. Order</th>
             <th className="border border-gray-300 p-2">Aksi</th>
           </tr>
