@@ -38,7 +38,12 @@ export async function GET(req,{params}) {
                                     select: {
                                         name: true,
                                         price: true,
-                                        slug: true
+                                        slug: true,
+                                        productPhotos: {
+                                            select: {
+                                                imageUrl: true
+                                            }
+                                        }
                                     }
                                 }
                             }

@@ -12,6 +12,8 @@ export default function OrderStatusBadge({ status }) {
     OPEN: "bg-amber-200 text-amber-600",
     REVIEWED: "bg-blue-200 text-blue-600",
     RESOLVED: "bg-green-200 text-green-600",
+    USER: "bg-green-200 text-green-600",
+    ADMIN: "bg-blue-200 text-blue-600",
   };
 
   const colorClass = colors[status] ?? "bg-gray-200 text-gray-600";

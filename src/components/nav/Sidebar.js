@@ -11,9 +11,9 @@ import {
   ShoppingBagIcon,
   InboxArrowDownIcon,
   HomeIcon,
-  UserCircleIcon,
-  DocumentDuplicateIcon, HomeModernIcon
+  Squares2X2Icon
 } from "@heroicons/react/24/solid";
+import Image from "next/image";
 
 export default function Sidebar({ onToggleChat }) {
   const router = useRouter();
@@ -22,6 +22,11 @@ export default function Sidebar({ onToggleChat }) {
     <div className="flex flex-col w-1/6 bg-gray-800 text-gray-300 min-h-screen pt-3">
       <ul>
           <>
+            <li className="font-medium px-3 py-2">
+              <Link href={"/admin"} className="flex items-center gap-4 mb-3">
+                <Image src={'/havenwear-white.png'} width={120} height={80} alt="havenwear-logo"/>
+              </Link>
+            </li>
             <li className="font-medium px-3 py-2 hover:bg-gray-900">
               <Link href={"/admin"} className="flex items-center gap-4 mb-1.5">
                 <HomeIcon className="size-5" />
@@ -62,6 +67,15 @@ export default function Sidebar({ onToggleChat }) {
               >
                 <UsersIcon className="size-5" />
                 Users
+              </Link>
+            </li>
+            <li className="font-medium px-3 py-2 hover:bg-gray-900">
+              <Link
+                href={"/admin/categories"}
+                className="flex items-center gap-4 mb-1.5"
+              >
+                <Squares2X2Icon className="size-5" />
+                Categories
               </Link>
             </li>
             <li className="font-medium  px-3 py-2 hover:bg-gray-900">

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { TrashIcon } from "@heroicons/react/24/solid";
+import { TrashIcon, CloudArrowUpIcon } from "@heroicons/react/24/solid";
 import { CldUploadWidget } from "next-cloudinary";
 
 export default function CreateProductForm() {
@@ -52,8 +52,8 @@ export default function CreateProductForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if(imageUrl.length === 0){
-      alert('Mohon untuk upload foto produk');
+    if (imageUrl.length === 0) {
+      alert("Mohon untuk upload foto produk");
       return;
     }
 
@@ -79,7 +79,9 @@ export default function CreateProductForm() {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col w-1/2">
       {/* Product Name */}
-      <label className="text-sm text-emerald-700 font-bold mb-1">Product Name</label>
+      <label className="text-sm text-emerald-700 font-bold mb-1">
+        Product Name
+      </label>
       <input
         name="name"
         type="text"
@@ -91,7 +93,9 @@ export default function CreateProductForm() {
       />
 
       {/* Category */}
-      <label className="text-sm text-emerald-700 font-bold mb-1">Category</label>
+      <label className="text-sm text-emerald-700 font-bold mb-1">
+        Category
+      </label>
       <select
         name="categoryId"
         value={formData.categoryId}
@@ -124,7 +128,9 @@ export default function CreateProductForm() {
       </select>
 
       {/* Description */}
-      <label className="text-sm text-emerald-700 font-bold mb-1">Description</label>
+      <label className="text-sm text-emerald-700 font-bold mb-1">
+        Description
+      </label>
       <textarea
         name="description"
         value={formData.description}
@@ -134,7 +140,9 @@ export default function CreateProductForm() {
       />
 
       {/* Color */}
-      <label className="text-sm text-emerald-700 font-bold mb-1">Available Color</label>
+      <label className="text-sm text-emerald-700 font-bold mb-1">
+        Available Color
+      </label>
       <input
         name="color"
         type="text"
@@ -179,7 +187,7 @@ export default function CreateProductForm() {
               required
             />
             <button type="button" onClick={() => removeSize(index)}>
-              <TrashIcon className="size-5 text-red-600"/>
+              <TrashIcon className="size-5 text-red-600" />
             </button>
           </div>
         ))}
@@ -192,11 +200,21 @@ export default function CreateProductForm() {
         </button>
       </div>
 
-      <CldUploadWidget signatureEndpoint='/api/sign-cloudinary' onSuccess={(results) => setImageUrl((prev) => [...prev, results.info.secure_url])}>
+      <CldUploadWidget
+        signatureEndpoint="/api/sign-cloudinary"
+        onSuccess={(results) =>
+          setImageUrl((prev) => [...prev, results.info.secure_url])
+        }
+      >
         {({ open }) => {
           return (
-            <button type="button" onClick={() => open()} className="mt-3 bg-emerald-600 text-white py-2 rounded hover:bg-emerald-700 cursor-pointer transition">
-              Upload an Image
+            <button
+              type="button"
+              onClick={() => open()}
+              className="mt-3 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 cursor-pointer transition flex flex-col items-center justify-center gap-1"
+            >
+              <CloudArrowUpIcon className="size-6" />
+              <span className="text-sm">Upload an Image</span>
             </button>
           );
         }}

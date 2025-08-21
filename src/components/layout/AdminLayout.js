@@ -20,7 +20,7 @@ export default function AdminLayout({ title = "Dashboard", children }) {
   return (
     <div className="flex">
       {user && (<Sidebar onToggleChat={() => setIsOpen((prev) => !prev)} />)}
-      <main className="w-5/6 p-10 bg-gray-100">
+      <main className="w-5/6 p-10 bg-gray-50">
         <header className="mb-3">
           <h1 className="text-2xl font-semibold text-gray-700">{title}</h1>
         </header>

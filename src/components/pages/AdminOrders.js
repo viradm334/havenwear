@@ -4,19 +4,30 @@ import { formatCurrency } from "@/utils/formatCurrency";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import Link from "next/link";
+import OrderStatusBadge from "../ui/OrderStatusBadge";
+import Image from "next/image";
 
 export default function AdminOrders() {
   const [orders, setOrders] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetch("/api/orders")
       .then((res) => res.json())
-      .then((data) => setOrders(data.ordersWithTotal));
+      .then((data) => {setOrders(data.ordersWithTotal); setIsLoading(false)});
   }, []);
+
+    if (isLoading) {
+      return (
+        <div className="flex justify-center items-center h-screen">
+          <Image src={"/loading.svg"} alt="Loading..." width={200} height={200} />
+        </div>
+      );
+    }
 
   return (
     <>
-      <table className="border-collapse border border-gray-400 bg-white w-full text-center">
+      <table className="border-collapse border border-gray-400 bg-white w-full text-center text-sm">
         <thead>
           <tr>
             <th className="border border-gray-300 p-2">No.</th>
@@ -39,8 +50,8 @@ export default function AdminOrders() {
               </td>
               <td className="border border-gray-300 p-2">{order.user.name}</td>
               <td className="border border-gray-300 p-2">{order.email}</td>
-              <td className="border border-gray-300 p-2">{order.status}</td>
-              <td className="border border-gray-300 p-2">{order.payment}</td>
+              <td className="border border-gray-300 p-2"><OrderStatusBadge status={order.status}/></td>
+              <td className="border border-gray-300 p-2"><OrderStatusBadge status={order.payment}/></td>
               <td className="border border-gray-300 p-2">{formatCurrency(order.totalPrice)}</td>
               <td className="border border-gray-300 p-2">
                 {dayjs(order.created_at).format("DD-MM-YYYY")}

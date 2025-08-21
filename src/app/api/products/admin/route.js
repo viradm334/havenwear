@@ -28,6 +28,11 @@ export async function GET(req){
                             }
                         }
                     }
+                },
+                productPhotos: {
+                    select: {
+                        imageUrl: true
+                    }
                 }
             }
         });

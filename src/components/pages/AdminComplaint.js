@@ -3,15 +3,21 @@ import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import OrderStatusBadge from "../ui/OrderStatusBadge";
+import Image from "next/image";
 
 export default function AdminComplaint() {
   const router = useRouter();
   const [complaints, setComplaints] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetch("/api/complaint")
       .then((res) => res.json())
-      .then((usr) => setComplaints(usr.complaints));
+      .then((usr) => {
+        setComplaints(usr.complaints);
+        setIsLoading(false);
+      });
   }, []);
 
   const reviewComplaint = async (complaintId) => {
@@ -33,9 +39,17 @@ export default function AdminComplaint() {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Image src={"/loading.svg"} alt="Loading..." width={200} height={200} />
+      </div>
+    );
+  }
+
   return (
     <>
-      <table className="border-collapse border border-gray-400 bg-white w-full text-center">
+      <table className="border-collapse border border-gray-400 bg-white w-full text-center text-sm">
         <thead>
           <tr>
             <th className="border border-gray-300 p-2">No.</th>
@@ -59,7 +73,9 @@ export default function AdminComplaint() {
               <td className="border border-gray-300 p-2">
                 {complaint.orderItem.productSize.product.name}
               </td>
-              <td className="border border-gray-300 p-2">{complaint.status}</td>
+              <td className="border border-gray-300 p-2">
+                <OrderStatusBadge status={complaint.status} />
+              </td>
               <td className="border border-gray-300 p-2">
                 {dayjs(complaint.created_at).format("DD-MM-YYYY")}
               </td>
@@ -78,7 +94,7 @@ export default function AdminComplaint() {
                 {complaint.status !== "OPEN" && (
                   <Link
                     href={`/admin/complaints/${complaint.id}`}
-                    className="outline-none rounded-md bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 cursor-pointer"
+                    className="outline-none rounded-sm bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 cursor-pointer"
                   >
                     Detail
                   </Link>

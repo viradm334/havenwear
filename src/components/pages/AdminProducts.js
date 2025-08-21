@@ -6,21 +6,33 @@ import Image from "next/image";
 
 export default function AdminProducts() {
   const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetch("/api/products/admin")
       .then((res) => res.json())
-      .then((item) => setProducts(item.data));
+      .then((item) => {
+        setProducts(item.data);
+        setIsLoading(false);
+      });
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Image src={"/loading.svg"} alt="Loading..." width={200} height={200} />
+      </div>
+    );
+  }
 
   return (
     <>
       <Link href={"/admin/product/create"}>
-        <button className="outline-none rounded px-3 py-2 bg-emerald-600 text-white mb-6 cursor-pointer hover:bg-emerald-700">
+        <button className="outline-none rounded px-3 py-2 transition bg-emerald-600 text-white mb-6 cursor-pointer hover:bg-emerald-700">
           + Create New Product
         </button>
       </Link>
-      <table className="border-collapse border border-gray-400 bg-white w-full text-center">
+      <table className="border-collapse border border-gray-400 bg-white w-full text-center text-sm">
         <thead>
           <tr>
             <th className="border border-gray-300 p-2">No.</th>
@@ -37,7 +49,20 @@ export default function AdminProducts() {
           {products.map((product, index) => (
             <tr key={product.id}>
               <td className="border border-gray-300 p-2">{index + 1}</td>
-              <td className="border border-gray-300 p-2">{<Image src={'/placeholder.jpg'} alt="product-image" height={160} width={160}/>}</td>
+              <td className="border border-gray-300 p-2 text-center">
+                <div className="relative w-[150px] h-[100px] mx-auto">
+                  <Image
+                    src={
+                      product.productPhotos.length > 0
+                        ? product.productPhotos[0].imageUrl
+                        : "/placeholder.jpg"
+                    }
+                    fill
+                    alt="item-image"
+                    className="rounded-md object-cover"
+                  />
+                </div>
+              </td>
               <td className="border border-gray-300 p-2">{product.name}</td>
               <td className="border border-gray-300 p-2">
                 {product.category.name}
@@ -48,12 +73,13 @@ export default function AdminProducts() {
               <td className="border border-gray-300 p-2">
                 {product.totalSold}
               </td>
+              <td className="border border-gray-300 p-2">{product.status}</td>
               <td className="border border-gray-300 p-2">
-                {product.status}
-              </td>
-              <td className="border border-gray-300 p-2">
-                <Link href={`/admin/product/edit/${product.slug}`} className="outline-none bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md">
-                Edit
+                <Link
+                  href={`/admin/product/edit/${product.slug}`}
+                  className="outline-none bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md"
+                >
+                  Edit
                 </Link>
               </td>
             </tr>

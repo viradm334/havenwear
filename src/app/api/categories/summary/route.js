@@ -5,6 +5,7 @@ export async function GET(req){
         const categories = await prisma.category.findMany({
             select: {
                 name: true,
+                imageUrl: true,
                 _count: {
                     select: {products: true}
                 }
@@ -13,7 +14,8 @@ export async function GET(req){
 
         const result = categories.map(c => ({
             name: c.name,
-            productsCount: c._count.products
+            productsCount: c._count.products,
+            imageUrl: c.imageUrl
         }));
 
         return Response.json({message: "Successfully retrieved categories data summary!", data: result})
