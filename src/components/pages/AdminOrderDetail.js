@@ -71,7 +71,7 @@ export default function AdminOrderDetail() {
       >
         <InputResiForm orderNumber={orderNumber} />
       </Modal>
-      <BackButton destination={'/admin/orders'}/>
+      <BackButton destination={"/admin/orders"} />
       <div className="flex flex-col p-5 gap-2 text-sm">
         <div className="flex gap-5">
           <div>
@@ -86,11 +86,11 @@ export default function AdminOrderDetail() {
           </div>
           <div>
             <h4 className="font-bold">Status Pesanan</h4>
-            <OrderStatusBadge status={order.status}/>
+            <OrderStatusBadge status={order.status} />
           </div>
           <div>
             <h4 className="font-bold">Status Pembayaran</h4>
-            <OrderStatusBadge status={order.payment}/>
+            <OrderStatusBadge status={order.payment} />
           </div>
           <div>
             <h4 className="font-bold">No. Resi</h4>
@@ -132,34 +132,42 @@ export default function AdminOrderDetail() {
         <h1 className="font-bold">Barang yang Dipesan</h1>
         {order.orderItems?.map((item, index) => (
           <div
-            key={index}
-            className="outline-1 outline-gray-300 rounded p-3 m-2 w-1/2 flex gap-4"
+            key={item.id}
+            className="outline-1 outline-gray-300 bg-white rounded p-5 w-1/2 flex gap-4 shadow-sm mb-3"
           >
             {/* Image Section */}
-            <Link href={`/${item.slug}`}>
-              <Image
-                src="/placeholder.jpg"
-                width={300}
-                height={300}
-                alt="item-image"
-              />
+            <Link href={`/${item.productSize.product.slug}`}>
+              <div className="relative w-[150px] h-[100px]">
+                <Image
+                  src={
+                    item.productSize.product.productPhotos.length > 0
+                      ? item.productSize.product.productPhotos[0].imageUrl
+                      : "/placeholder.jpg"
+                  }
+                  fill
+                  alt="item-image"
+                  className="rounded-md object-cover"
+                />
+              </div>
             </Link>
 
             {/* Info + Qty Section */}
             <div className="flex flex-col justify-between w-full">
               {/* Title & Price */}
-              <h4 className="font-medium text-sm text-slate-700">
+              <h4 className="font-bold text-md text-slate-700">
                 {item.productSize.product.name}
               </h4>
-              <h5 className="text-gray-800 font-semibold mb-2">
-                {formatCurrency(item.price)}
+              <h4 className="font-medium text-sm text-slate-700">
+                Ukuran: {item.productSize.name}
+              </h4>
+              <h5 className="text-gray-800 text-sm font-medium">
+                Jumlah: {item.quantity}
               </h5>
-              <h5 className="text-gray-800 font-semibold mb-2">
-                {item.quantity}x
+              <h5 className="text-gray-800 font-medium text-sm">
+                Harga satuan: {formatCurrency(item.price)}
               </h5>
-              <h5 className="text-gray-800 font-semibold mb-2">Subtotal</h5>
-              <h5 className="text-gray-800 font-medium mb-2">
-                {formatCurrency(item.price * item.quantity)}
+              <h5 className="text-gray-800 font-semibold">
+                Subtotal: {formatCurrency(item.price * item.quantity)}
               </h5>
             </div>
           </div>
