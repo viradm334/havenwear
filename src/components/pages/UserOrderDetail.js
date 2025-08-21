@@ -201,7 +201,7 @@ export default function UserOrderDetail({ orderNumber }) {
           >
             Kembali
           </Link>
-          {order.payment === "UNPAID" && (
+          {order.payment === "UNPAID" && order.status !== "CANCELED" && (
             <button
               className="px-6 py-1 rounded text-white bg-yellow-500 hover:bg-yellow-600 cursor-pointer"
               onClick={payOrder}

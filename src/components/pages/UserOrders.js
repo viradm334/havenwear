@@ -4,57 +4,105 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { formatCurrency } from "@/utils/formatCurrency";
 import Image from "next/image";
+import { ShoppingBagIcon } from "@heroicons/react/24/solid";
+import OrderStatusBadge from "../ui/OrderStatusBadge";
+import dayjs from "dayjs";
 
 export default function UserOrders({ user }) {
   const [orders, setOrders] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!user?.id) return;
     fetch(`/api/orders/my/${user.id}`)
       .then((res) => res.json())
-      .then((data) => setOrders(data.orders));
+      .then((data) => {
+        setOrders(data.orders);
+        setIsLoading(false);
+      });
   }, [user]);
 
+  const cancelOrder = async (orderNumber) => {
+    const confirmed = confirm("Anda yakin untuk membatalkan pesanan?");
+
+    if (confirmed) {
+      try {
+        const res = await fetch(`/api/orders/cancel/${orderNumber}`, {
+          method: "PATCH",
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          alert(data.message);
+          window.location.reload();
+        } else {
+          console.error(data.message);
+        }
+      } catch (err) {
+        console.error(err.message);
+      }
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Image src={"/loading.svg"} alt="Loading..." width={200} height={200} />
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-wrap gap-6">
+    <div className="flex flex-wrap justify-center gap-6">
       {orders.map((order) => {
         const item = order.orderItems[0];
-  
+
         return (
           <div
             key={order.id}
-            className="w-3/4 border border-gray-300 rounded-lg p-4 bg-white"
+            className="w-2/3 border border-gray-300 rounded-lg p-4 bg-white flex flex-col shadow-md"
           >
-            <h3 className="text-lg font-semibold mb-4 text-gray-800">
-              Order Number: {order.orderNumber}
-            </h3>
-            <h3 className="text-lg font-semibold mb-4 text-gray-800">
-              Status: {order.status}
-            </h3>
-  
+            {/* Card header */}
+            <div className="flex justify-start gap-4 mb-2">
+              <ShoppingBagIcon
+                className="size-5 text-emerald-700
+            "
+              />
+              <h3 className="text-sm font-light text-gray-800">
+                {order.orderNumber}
+              </h3>
+              <h3 className="text-sm font-light text-gray-800">
+                {dayjs(order.created_at).format("DD MMM YYYY")}
+              </h3>
+              <OrderStatusBadge status={order.status} />
+            </div>
+            {/* End of Card header */}
+
             <div className="border border-gray-200 rounded-lg p-4 flex gap-4 bg-gray-50">
               {/* Image Section */}
               <Link href={`/${item.slug ?? ""}`} className="shrink-0">
-                <Image
-                  src="/placeholder.jpg"
-                  width={100}
-                  height={100}
-                  alt="item-image"
-                  className="rounded-md object-cover"
-                />
+                <div className="relative w-[150px] h-[100px]">
+                  <Image
+                    src={
+                      item.productSize.product.productPhotos.length > 0
+                        ? item.productSize.product.productPhotos[0].imageUrl
+                        : "/placeholder.jpg"
+                    }
+                    fill
+                    alt="item-image"
+                    className="rounded-md object-cover"
+                  />
+                </div>
               </Link>
-  
+
               {/* Info + Qty Section */}
               <div className="flex flex-col justify-between w-full">
                 <div>
-                  <h4 className="text-base font-medium text-gray-700">
-                    {item.productSize.product.name}
+                  <h4 className="text-base font-semibold text-gray-700">
+                    {item.productSize.product.name} - {item.productSize.name}
                   </h4>
-                  <p className="text-sm text-gray-600">
-                    Size: {item.productSize.name}
-                  </p>
                 </div>
-  
+
                 <div className="mt-2 space-y-1">
                   <p className="text-sm text-gray-800">
                     Price: {formatCurrency(item.price)}
@@ -68,7 +116,7 @@ export default function UserOrders({ user }) {
                 </div>
               </div>
             </div>
-  
+
             {/* Optional: Show how many more items */}
             {order.orderItems.length > 1 && (
               <p className="text-sm text-gray-500 mt-2">
@@ -76,13 +124,25 @@ export default function UserOrders({ user }) {
                 {order.orderItems.length > 2 ? "s" : ""}
               </p>
             )}
-  
-            <Link
-              href={`/user/orders/${order.orderNumber}`}
-              className="inline-block mt-4 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded transition"
-            >
-              Lihat Detail
-            </Link>
+
+            <div className="flex justify-end gap-4">
+              {order.status === "PENDING" && (
+                <button
+                  className="inline-block mt-4 px-4 py-2 bg-white outline-1 outline-red-500 text-red-500 text-sm font-medium rounded cursor-pointer"
+                  onClick={() => {
+                    cancelOrder(order.orderNumber);
+                  }}
+                >
+                  Batalkan Pesanan
+                </button>
+              )}
+              <Link
+                href={`/user/orders/${order.orderNumber}`}
+                className="inline-block mt-4 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded transition"
+              >
+                Lihat Detail
+              </Link>
+            </div>
           </div>
         );
       })}

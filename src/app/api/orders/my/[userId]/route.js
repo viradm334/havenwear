@@ -11,6 +11,7 @@ export async function GET(req, { params }) {
         orderNumber: true,
         status: true,
         payment: true,
+        created_at: true,
         orderItems: {
           select: {
             quantity: true,
@@ -21,6 +22,11 @@ export async function GET(req, { params }) {
                 product: {
                   select: {
                     name: true,
+                    productPhotos: {
+                      select: {
+                        imageUrl: true
+                      }
+                    }
                   },
                 },
               },
