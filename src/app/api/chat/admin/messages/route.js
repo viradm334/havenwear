@@ -7,19 +7,48 @@ export async function GET(req) {
     });
     const adminId = admin?.id;
 
-    const latestMessages = await prisma.message.findMany({
+    const allMessages = await prisma.message.findMany({
       where: {
-        receiverId: adminId,
-        NOT: { senderId: adminId },
+        OR: [
+          { senderId: adminId },
+          { receiverId: adminId }
+        ]
       },
       orderBy: {
-        created_at: "desc",
+        created_at: "desc"
       },
-      distinct: ["senderId"],
       include: {
-        sender: true,
-      },
+        sender: {
+          select: {
+            name: true,
+            id: true
+          }
+        },
+        receiver: {
+          select: {
+            id: true,
+            name:true
+          }
+        }
+      }
     });
+    
+    // Group messages by conversation partner
+    const latestByUser = new Map();
+    
+    for (const msg of allMessages) {
+      const partner =
+        msg.senderId === adminId ? msg.receiver : msg.sender;
+    
+      if (!latestByUser.has(partner.id)) {
+        latestByUser.set(partner.id, {
+          user: partner,
+          message: msg
+        });
+      }
+    }
+    
+    const latestMessages = Array.from(latestByUser.values());
 
     // bikin 2 query,
     // yg ke-1 ambil semua userid dari messages yang non admin

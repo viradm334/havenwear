@@ -46,15 +46,15 @@ export default function ChatBox({ role, isOpen, onClose, userId }) {
     });
 
     newchannel.bind("new-message", (data) => {
-      console.log("Received new-message:", data);
+      // console.log("Received new-message:", data);
       setMessages((prev) => {
         const exists = prev.some((msg) => msg.id === data.id);
         return exists ? prev : [...prev, data];
       });
-      setLatestMessages({
-        ...latestMessages, 
-        [data.senderId] : data.content
-      });
+      setLatestMessages((prev) => ({
+        ...prev,
+        [data.senderId]: data.content
+      }));      
     });
   }, [userId]);
 
@@ -78,10 +78,10 @@ export default function ChatBox({ role, isOpen, onClose, userId }) {
         .then((data) => {
           setChatList(data.latestMessages);
           data.latestMessages.forEach(element => {
-            console.log(element);
+            // console.log(element);
             setLatestMessages((prev) => ({
               ...prev, 
-              [element.senderId] : element.content
+              [element.user.id] : element.message.content
             }))
           });
         });
@@ -130,10 +130,12 @@ export default function ChatBox({ role, isOpen, onClose, userId }) {
         setMessages((prev) =>
           prev.map((msg) => (msg.id === tempId ? data.chat : msg))
         );
-        setLatestMessages({
-          ...latestMessages, 
-          [targetUserId] : userInput
-        });
+        if(role === 'ADMIN'){
+          setLatestMessages({
+            ...latestMessages, 
+            [targetUserId] : userInput
+          });
+        }
         setUserInput("");
       } else {
         console.error(data.message);
@@ -169,13 +171,14 @@ export default function ChatBox({ role, isOpen, onClose, userId }) {
           {/* Chat List */}
           {role === "ADMIN" && (
             <div className="chat-list w-1/3 h-full outline-1 outline-gray-300 flex flex-col overflow-y-auto">
+              {/* {JSON.stringify(latestMessages)} */}
               {chatList.map((chat, index) => (
                 <UserBox
-                  onClick={() => getConversationWithUser(chat.senderId)}
+                  onClick={() => getConversationWithUser(chat.user.id)}
                   key={index}
                   imageUrl={"/placeholder.jpg"}
-                  username={chat.sender.name}
-                  latestMessage={latestMessages[chat.senderId]}
+                  username={chat.user.name}
+                  latestMessage={latestMessages[chat.user.id]}
                 />
               ))}
             </div>
@@ -188,7 +191,7 @@ export default function ChatBox({ role, isOpen, onClose, userId }) {
             }`}
           >
             {/* Receiver Info */}
-            <div className="receiver-box h-[10%] outline-1 outline-gray-300 text-xs text-gray-800 font-semibold p-2 truncate">
+            <div className="receiver-box h-[30px] shrink-0 outline-1 outline-gray-300 text-xs text-gray-800 font-semibold p-2 truncate">
               {role === "USER" ? "Admin" : chatPartnerName}
             </div>
 
