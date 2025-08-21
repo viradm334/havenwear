@@ -3,9 +3,11 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import PasswordInput from "../ui/PasswordInput";
 
 export default function RegisterForm() {
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -76,14 +78,12 @@ export default function RegisterForm() {
         <label className="text-sm text-emerald-700 font-bold mb-1.5">
           Password
         </label>
-        <input
-          type="password"
-          name="password"
-          className="outline-1 outline-gray-400 rounded-sm mb-3 p-1.5 placeholder:text-sm placeholder:font-normal focus:outline-emerald-600"
-          placeholder="Enter your password"
+        <PasswordInput
+          name={"password"}
+          showPassword={showPassword}
           value={formData.password}
           onChange={handleChange}
-          required
+          onClick={() => setShowPassword(!showPassword)}
         />
 
         <p className="mb-3 font-medium text-sm text-gray-500">
