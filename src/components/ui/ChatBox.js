@@ -17,6 +17,7 @@ export default function ChatBox({ role, isOpen, onClose, userId }) {
   const [channel, setChannel] = useState(null);
   const [latestMessages, setLatestMessages] = useState({});
   const textareaRef = useRef(null);
+  const targetUserIdRef = useRef(null);
 
   useEffect(() => {
     const textarea = textareaRef.current;
@@ -25,6 +26,10 @@ export default function ChatBox({ role, isOpen, onClose, userId }) {
       textarea.style.height = `${textarea.scrollHeight}px`;
     }
   }, [userInput]);
+
+  useEffect(() => {
+    targetUserIdRef.current = targetUserId;
+  }, [targetUserId]);
 
   useEffect(() => {
     if (!userId) return;
@@ -47,14 +52,21 @@ export default function ChatBox({ role, isOpen, onClose, userId }) {
 
     newchannel.bind("new-message", (data) => {
       // console.log("Received new-message:", data);
+      setLatestMessages((prev) => ({
+        ...prev,
+        [data.senderId]: data.content,
+      }));
+      const currentTarget = targetUserIdRef.current;
+      console.log(currentTarget);
+      console.log(data.senderId);
+
+      if (!!currentTarget && data.senderId !== currentTarget) {
+        return;
+      }
       setMessages((prev) => {
         const exists = prev.some((msg) => msg.id === data.id);
         return exists ? prev : [...prev, data];
       });
-      setLatestMessages((prev) => ({
-        ...prev,
-        [data.senderId]: data.content
-      }));      
     });
   }, [userId]);
 
@@ -77,12 +89,12 @@ export default function ChatBox({ role, isOpen, onClose, userId }) {
         .then((res) => res.json())
         .then((data) => {
           setChatList(data.latestMessages);
-          data.latestMessages.forEach(element => {
+          data.latestMessages.forEach((element) => {
             // console.log(element);
             setLatestMessages((prev) => ({
-              ...prev, 
-              [element.user.id] : element.message.content
-            }))
+              ...prev,
+              [element.user.id]: element.message.content,
+            }));
           });
         });
     }
@@ -130,10 +142,10 @@ export default function ChatBox({ role, isOpen, onClose, userId }) {
         setMessages((prev) =>
           prev.map((msg) => (msg.id === tempId ? data.chat : msg))
         );
-        if(role === 'ADMIN'){
+        if (role === "ADMIN") {
           setLatestMessages({
-            ...latestMessages, 
-            [targetUserId] : userInput
+            ...latestMessages,
+            [targetUserId]: userInput,
           });
         }
         setUserInput("");

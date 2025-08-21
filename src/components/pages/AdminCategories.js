@@ -37,7 +37,7 @@ export default function AdminCategories() {
         </thead>
         <tbody>
           {categories.map((ctg, index) => (
-            <tr key={ctg.id}>
+            <tr key={index}>
               <td className="border border-gray-300 p-2">{index + 1}</td>
               <td className="border border-gray-300 p-2">{ctg.name}</td>
               <td className="border border-gray-300 p-2 text-center">
