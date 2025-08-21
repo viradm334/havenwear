@@ -7,6 +7,7 @@ import Image from "next/image";
 import { ShoppingBagIcon } from "@heroicons/react/24/solid";
 import OrderStatusBadge from "../ui/OrderStatusBadge";
 import dayjs from "dayjs";
+import BackButton from "../ui/BackButton";
 
 export default function UserOrders({ user }) {
   const [orders, setOrders] = useState([]);
@@ -53,7 +54,8 @@ export default function UserOrders({ user }) {
   }
 
   return (
-    <div className="flex flex-wrap justify-center gap-6">
+    <div className="flex flex-col items-center gap-6">
+      <BackButton destination={'/'}/>
       {orders.map((order) => {
         const item = order.orderItems[0];
 

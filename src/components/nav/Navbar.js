@@ -33,7 +33,7 @@ export default function Navbar({ user = null, onToggleChat }) {
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setShowDropdown(prev => !prev)}
-                className="text-slate-600 font-medium flex gap-1 items-center cursor-pointer"
+                className="text-gray-700 font-medium flex gap-1 items-center cursor-pointer"
               >
                 <UserCircleIcon className="size-5" />
                 {user.name}
@@ -63,7 +63,7 @@ export default function Navbar({ user = null, onToggleChat }) {
             </Link>
           )}
 
-          <Link href={"/cart"} className="text-slate-600 font-medium">
+          <Link href={"/cart"} className="text-gray-700 font-medium">
             <ShoppingCartIcon className="size-6" />
           </Link>
         </ul>

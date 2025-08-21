@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import BackButton from "../ui/BackButton";
 
 export default function UserProfile({ user }) {
   const [profile, setProfile] = useState({
@@ -42,7 +43,8 @@ export default function UserProfile({ user }) {
   }
 
   return (
-    <div className="flex justify-center">
+    <div className="flex flex-col items-center">
+      <BackButton destination={'/'}/>
       <div className="flex flex-col shadow-md rounded outline-1 outline-gray-300 w-1/2 p-5 mb-3">
         <div className="w-full">
           <h1 className="text-gray-700 text-md font-semibold text-center">

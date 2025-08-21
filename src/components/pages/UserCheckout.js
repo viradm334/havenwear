@@ -5,6 +5,7 @@ import Link from "next/link";
 import { formatCurrency } from "@/utils/formatCurrency";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import BackButton from "../ui/BackButton";
 
 export default function UserCheckout({ user }) {
   const router = useRouter();
@@ -93,7 +94,8 @@ export default function UserCheckout({ user }) {
 
   return (
     <>
-      <div className="main flex">
+      <div className="main flex flex-col">
+        <BackButton destination={'/cart'}/>
         <div className="flex p-5 w-full gap-4">
           <form
             className="flex flex-col outline-1 outline-gray-300 p-5 w-1/2 rounded shadow-md"
@@ -189,7 +191,7 @@ export default function UserCheckout({ user }) {
 
             <button
               type="submit"
-              className="text-white text-center bg-emerald-800 rounded hover:bg-900 w-full px-3 py-2 mt-4 cursor-pointer"
+              className="text-white text-center bg-emerald-600 rounded hover:bg-emerald-700 transition w-full px-3 py-2 mt-4 cursor-pointer"
             >
               Buat Pesanan
             </button>
@@ -245,7 +247,7 @@ export default function UserCheckout({ user }) {
               </div>
             ))}
             <div className="flex justify-end">
-              <h1 className="font-bold text-md">
+              <h1 className="font-bold text-md text-emerald-700">
                 Total:
                 {formatCurrency(
                   cartItems.reduce(

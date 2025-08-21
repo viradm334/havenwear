@@ -16,7 +16,7 @@ export default function PasswordInput({name, value, showPassword = false, onChan
         <button
           type="button"
           onClick={onClick}
-          className="absolute right-2 top-5 -translate-y-1/2 text-gray-300 hover:text-gray-500"
+          className="absolute right-2 top-5 -translate-y-1/2 text-gray-400 hover:text-gray-500"
         >
           {showPassword ? (
             <EyeSlashIcon className="size-5" />

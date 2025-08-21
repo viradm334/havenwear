@@ -22,7 +22,12 @@ export async function GET(req, {params}){
                             name: true,
                             product: {
                                 select : {
-                                    name: true
+                                    name: true,
+                                    productPhotos: {
+                                        select: {
+                                            imageUrl: true
+                                        }
+                                    }
                                 }
                             }
                         }
