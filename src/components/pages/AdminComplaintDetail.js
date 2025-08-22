@@ -55,14 +55,14 @@ export default function AdminComplaintDetail() {
           <div>
             <h4 className="font-bold">Tanggal Komplain</h4>
             <p className="mb-2">
-              {dayjs(complaint.created_at).format("DD-MM-YYYY")}
+              {dayjs(complaint.created_at).format("DD-MM-YYYY HH:mm")}
             </p>
           </div>
           <div>
             <h4 className="font-bold">Tanggal Cancel</h4>
             <p className="mb-2">
               {complaint.canceled_at
-                ? dayjs(complaint.canceled_at).format("DD-MM-YYYY")
+                ? dayjs(complaint.canceled_at).format("DD-MM-YYYY HH:mm")
                 : "-"}
             </p>
           </div>
@@ -90,7 +90,7 @@ export default function AdminComplaintDetail() {
             <h4 className="font-bold">Tanggal Review</h4>
             <p className="mb-2">
               {complaint.reviewed_at
-                ? dayjs(complaint.reviewed_at).format("DD-MM-YYYY")
+                ? dayjs(complaint.reviewed_at).format("DD-MM-YYYY HH:mm")
                 : "-"}
             </p>
           </div>
@@ -98,7 +98,7 @@ export default function AdminComplaintDetail() {
             <h4 className="font-bold">Tanggal Resolve</h4>
             <p className="mb-2">
               {complaint.resolved_at
-                ? dayjs(complaint.resolved_at).format("DD-MM-YYYY")
+                ? dayjs(complaint.resolved_at).format("DD-MM-YYYY HH:mm")
                 : "-"}
             </p>
           </div>

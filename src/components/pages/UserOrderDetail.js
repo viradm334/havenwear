@@ -114,7 +114,7 @@ export default function UserOrderDetail({ orderNumber }) {
             <div>
               <h4 className="font-bold">Tanggal Pesan</h4>
               <p className="mb-2">
-                {dayjs(order.created_at).format("DD-MM-YYYY")}
+                {dayjs(order.created_at).format("DD-MM-YYYY HH:mm")}
               </p>
             </div>
             <div>
@@ -125,7 +125,7 @@ export default function UserOrderDetail({ orderNumber }) {
               <div>
                 <h4 className="font-bold">Tanggal Pesanan Dibatalkan</h4>
                 <p className="mb-2">
-                  {dayjs(order.canceled_at).format("DD-MM-YYYY")}
+                  {dayjs(order.canceled_at).format("DD-MM-YYYY HH:mm")}
                 </p>
               </div>
             )}
@@ -175,7 +175,7 @@ export default function UserOrderDetail({ orderNumber }) {
               <h4 className="font-bold">Tanggal Bayar</h4>
               <p className="mb-2">
                 {order.paid_at
-                  ? dayjs(order.paid_at).format("DD-MM-YYYY")
+                  ? dayjs(order.paid_at).format("DD-MM-YYYY  HH:mm")
                   : "-"}
               </p>
             </div>
@@ -183,7 +183,7 @@ export default function UserOrderDetail({ orderNumber }) {
               <h4 className="font-bold">Tanggal Pembayaran Dikonfirmasi</h4>
               <p className="mb-2">
                 {order.payment_confirmed_at
-                  ? dayjs(order.payment_confirmed_at).format("DD-MM-YYYY")
+                  ? dayjs(order.payment_confirmed_at).format("DD-MM-YYYY HH:mm")
                   : "-"}
               </p>
             </div>

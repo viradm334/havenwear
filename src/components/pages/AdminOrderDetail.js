@@ -81,7 +81,7 @@ export default function AdminOrderDetail() {
           <div>
             <h4 className="font-bold">Tanggal Pesan</h4>
             <p className="mb-2">
-              {dayjs(order.created_at).format("DD-MM-YYYY")}
+              {dayjs(order.created_at).format("DD-MM-YYYY HH:mm")}
             </p>
           </div>
           <div>
