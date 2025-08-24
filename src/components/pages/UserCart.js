@@ -1,16 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef, useMemo } from "react";
 import Link from "next/link";
 import { formatCurrency } from "@/utils/formatCurrency";
 import Image from "next/image";
 import { TrashIcon } from "@heroicons/react/24/solid";
 import BackButton from "../ui/BackButton";
+import _ from "lodash";
 
 export default function UserCart() {
   const [cart, setCart] = useState(null);
   const [cartItems, setCartItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const cartItemsRef = useRef(cartItems);
 
   useEffect(() => {
     fetch("/api/cart")
@@ -29,6 +31,16 @@ export default function UserCart() {
     }
   }, [cart]);
 
+  useEffect(() => {
+    cartItemsRef.current = cartItems;
+  }, [cartItems]);
+
+  useEffect(() => {
+    return () => {
+      debouncedUpdateQty.cancel();
+    };
+  }, []);
+
   const updateQuantity = (itemId, newQty) => {
     setCartItems((prev) =>
       prev.map((item) =>
@@ -43,88 +55,49 @@ export default function UserCart() {
     );
 
     if (confirmed) {
-      const res = await fetch(`/api/cart/delete-item/${id}`, {
-        method: "DELETE",
-      });
+      try {
+        const res = await fetch(`/api/cart/delete-item/${id}`, {
+          method: "DELETE",
+        });
 
-      const data = await res.json();
+        const data = await res.json();
 
-      if (res.ok) {
-        alert(data.message);
-        window.location.reload();
-      } else {
-        console.error(data.message);
-        alert(data.message);
+        if (res.ok) {
+          alert(data.message);
+          window.location.reload();
+        }
+      } catch (err) {
+        console.error(err.message);
       }
     } else {
       return;
     }
   };
 
-  const addQuantity = async (cartItemId, quantity) => {
-    try {
-      const addedQty = quantity + 1;
-      const res = await fetch(`/api/cart/update-quantity/${cartItemId}`, {
-        method: "PATCH",
-        body: JSON.stringify({ quantity: addedQty }),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        updateQuantity(cartItemId, addedQty);
-      } else {
-        console.error(data.message);
-      }
-    } catch (err) {
-      console.error(err.message);
-    }
-  };
-
-  const decreaseQuantity = async (cartItemId, quantity) => {
-    if (quantity === 1) {
-      const confirmed = confirm(
-        "Apa anda mau menghapus item ini dari keranjang?"
-      );
-
-      if (confirmed) {
+  const debouncedUpdateQty = useMemo(() => {
+    return _.debounce(async (itemId) => {
+      const item = cartItemsRef.current.find((i) => i.id === itemId);
+      if (item) {
         try {
-          const res = await fetch(`/api/cart/delete-item/${cartItemId}`, {
-            method: "DELETE",
+          const res = await fetch(`/api/cart/update-quantity/${item.id}`, {
+            method: "PATCH",
+            body: JSON.stringify({ quantity: item.quantity }),
           });
 
-          const data = await res.json();
-
-          if (res.ok) {
-            alert(data.message);
-            window.location.reload();
-          } else {
-            console.error(data.message);
-            alert(data.message);
+          if (res.ok && res.status !== 204) {
+            const data = await res.json();
+            updateQuantity(item.id, data.cartItem.quantity);
           }
         } catch (err) {
           console.error(err.message);
         }
       }
-    } else {
-      try {
-        const decreasedQty = quantity - 1;
-        const res = await fetch(`/api/cart/update-quantity/${cartItemId}`, {
-          method: "PATCH",
-          body: JSON.stringify({ quantity: decreasedQty }),
-        });
+    }, 2000);
+  }, []);
 
-        const data = await res.json();
-
-        if (res.ok) {
-          updateQuantity(cartItemId, decreasedQty);
-        } else {
-          console.error(data.message);
-        }
-      } catch (err) {
-        console.error(err.message);
-      }
-    }
+  const handleUpdateQuantity = (itemId, quantity) => {
+    updateQuantity(itemId, quantity);
+    debouncedUpdateQty(itemId);
   };
 
   if (isLoading) {
@@ -184,7 +157,12 @@ export default function UserCart() {
                         <button
                           type="button"
                           onClick={() => {
-                            decreaseQuantity(item.id, item.quantity);
+                            if (item.quantity === 1) {
+                              debouncedUpdateQty.cancel();
+                              handleDelete(item.id);
+                            } else {
+                              handleUpdateQuantity(item.id, item.quantity - 1);
+                            }
                           }}
                           className="outline-1 outline-gray-400 w-8 h-8 flex justify-center items-center font-bold"
                         >
@@ -196,7 +174,8 @@ export default function UserCart() {
                         <button
                           type="button"
                           onClick={() => {
-                            addQuantity(item.id, item.quantity);
+                            // handleAddQuantity(item.id, item.quantity + 1);
+                            handleUpdateQuantity(item.id, item.quantity + 1);
                           }}
                           className="outline-1 outline-gray-400 w-8 h-8 flex justify-center items-center font-bold"
                         >
