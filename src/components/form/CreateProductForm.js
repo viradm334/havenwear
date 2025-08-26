@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { TrashIcon, CloudArrowUpIcon } from "@heroicons/react/24/solid";
 import { CldUploadWidget } from "next-cloudinary";
+import Image from "next/image";
+import { XCircleIcon } from "@heroicons/react/24/solid";
 
 export default function CreateProductForm() {
   const [categories, setCategories] = useState([]);
@@ -10,7 +12,7 @@ export default function CreateProductForm() {
     name: "",
     categoryId: "",
     description: "",
-    status: "PUBLISHED",
+    status: "",
     color: "",
     price: "",
   });
@@ -47,6 +49,29 @@ export default function CreateProductForm() {
     const updated = [...sizes];
     updated.splice(index, 1);
     setSizes(updated);
+  };
+
+  const handleDelete = async (public_id) => {
+    const confirmed = confirm("Anda yakin untuk menghapus foto produk?");
+
+    if (confirmed) {
+      try {
+        console.log(public_id);
+        const res = await fetch("/api/delete-image", {
+          method: "POST",
+          body: JSON.stringify({ public_id }),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          setImageUrl((prev) =>
+            prev.filter((img) => img.public_id !== public_id)
+          );
+        }
+      } catch (err) {
+        console.error(err.message);
+      }
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -116,7 +141,7 @@ export default function CreateProductForm() {
         Product Status
       </label>
       <select
-        name="categoryId"
+        name="status"
         value={formData.status}
         onChange={handleInputChange}
         className="outline-1 outline-gray-400 rounded-sm mb-3 p-1.5 placeholder:text-sm placeholder:text-normal focus:outline-emerald-600"
@@ -202,16 +227,22 @@ export default function CreateProductForm() {
 
       <CldUploadWidget
         signatureEndpoint="/api/sign-cloudinary"
-        onSuccess={(results) =>
-          setImageUrl((prev) => [...prev, results.info.secure_url])
-        }
+        onSuccess={(results) => {
+          setImageUrl((prev) => [
+            ...prev,
+            {
+              secure_url: results.info.secure_url,
+              public_id: results.info.public_id,
+            },
+          ]);
+        }}
       >
         {({ open }) => {
           return (
             <button
               type="button"
               onClick={() => open()}
-              className="mt-3 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 cursor-pointer transition flex flex-col items-center justify-center gap-1"
+              className="mt-3 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 cursor-pointer transition flex flex-col items-center justify-center gap-1 mb-3"
             >
               <CloudArrowUpIcon className="size-6" />
               <span className="text-sm">Upload an Image</span>
@@ -219,6 +250,37 @@ export default function CreateProductForm() {
           );
         }}
       </CldUploadWidget>
+
+      <div className="flex flex-col gap-3">
+        <h4 className="font-semibold text-gray-800">Product Images</h4>
+        <div className="flex gap-3">
+          {imageUrl.length > 0 &&
+            imageUrl.map((item, index) => (
+              <div
+                key={index}
+                className="relative w-32 h-32 rounded overflow-hidden border border-gray-300"
+              >
+                {/* Delete Button */}
+                <button
+                  type="button"
+                  className="absolute top-1 right-1 z-10 bg-white rounded-full p-0.5 hover:bg-red-100"
+                  onClick={() => handleDelete(item.public_id)}
+                >
+                  <XCircleIcon className="size-5 text-red-500" />
+                </button>
+
+                {/* Image */}
+                <Image
+                  src={item.secure_url}
+                  width={50}
+                  height={50}
+                  alt="product-image"
+                  className="object-cover w-full h-full"
+                />
+              </div>
+            ))}
+        </div>
+      </div>
 
       <button
         type="submit"

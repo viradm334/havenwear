@@ -6,7 +6,7 @@ export async function PUT(req, {params}){
     try{
         const {slug} = await params;
         const body = await req.json();
-        const {name, price, categoryId, description, productSizes} = body;
+        const {name, price, categoryId, description, productSizes, existingImages, newImages, deletedImages} = body;
 
         const existingProduct = await prisma.product.findUnique({where: {slug}});
 
@@ -29,8 +29,22 @@ export async function PUT(req, {params}){
                     stock: Number(size.stock),
                   },
                 })),
-              },            
-          };
+              }, 
+              productPhotos: {
+                deleteMany: deletedImages.map((img) => ({ id: img.id })),
+                update: existingImages.map((item) => ({
+                  where: { id: item.id },
+                  data: {
+                    imageUrl: item.imageUrl,
+                    public_id: item.public_id,
+                  },
+                })),
+                create: newImages.map((item) => ({
+                  imageUrl: item.imageUrl,
+                  public_id: item.public_id,
+                })),
+                        
+          }}
 
         const updated = await prisma.product.update({
             where: {slug},

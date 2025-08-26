@@ -16,8 +16,9 @@ export async function GET(req, {params}){
               },
               productPhotos: {
                 select: {
+                  id: true,
                   imageUrl: true,
-                  thumbnail: true,
+                  public_id: true
                 },
               },
               category: {
