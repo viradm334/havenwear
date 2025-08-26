@@ -5,20 +5,35 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import OrderStatusBadge from "../ui/OrderStatusBadge";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
+import Pagination from "../ui/Pagination";
 
 export default function AdminComplaint() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const page = parseInt(searchParams.get("page") || "1");
   const [complaints, setComplaints] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [meta, setMeta] = useState({
+    total: 0,
+    page: 1,
+    lastPage: 1,
+  });
+  const [status, setStatus] = useState(searchParams.get("status") || "");
 
   useEffect(() => {
-    fetch("/api/complaint")
+    fetch(`/api/complaint?page=${page}&status=${status}`)
       .then((res) => res.json())
       .then((usr) => {
         setComplaints(usr.complaints);
         setIsLoading(false);
+        setMeta({
+          total: usr.meta.total,
+          page: usr.meta.page,
+          lastPage: usr.meta.lastPage,
+        });
       });
-  }, []);
+  }, [page, status]);
 
   const reviewComplaint = async (complaintId) => {
     try {
@@ -48,7 +63,26 @@ export default function AdminComplaint() {
   }
 
   return (
-    <>
+    <div className="flex flex-col gap-2">
+      <div className="mb-3">
+        <form className="flex items-end gap-5">
+          <div className="flex flex-col gap-1 w-1/4">
+            <label>Order Status</label>
+            <select
+              className="outline-1 outline-gray-300 rounded-sm p-1.5 focus:outline-emerald-600"
+              name="status"
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+            >
+              <option value="">Select status</option>
+              <option value="OPEN">Open</option>
+              <option value="REVIEWED">Reviewed</option>
+              <option value="RESOLVED">Resolved</option>
+              <option value="CANCELED">Canceled</option>
+            </select>
+          </div>
+        </form>
+      </div>
       <table className="border-collapse border border-gray-400 bg-white w-full text-center text-sm">
         <thead>
           <tr>
@@ -104,6 +138,7 @@ export default function AdminComplaint() {
           ))}
         </tbody>
       </table>
-    </>
+      <Pagination page={page} lastPage={meta.lastPage} />
+    </div>
   );
 }

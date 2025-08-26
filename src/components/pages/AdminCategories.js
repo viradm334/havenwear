@@ -2,19 +2,33 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
+import Pagination from "../ui/Pagination";
 
 export default function AdminCategories() {
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const searchParams = useSearchParams();
+  const page = parseInt(searchParams.get("page") || "1");
+  const [meta, setMeta] = useState({
+    total: 0,
+    page: 1,
+    lastPage: 1,
+  });
 
   useEffect(() => {
-    fetch("/api/categories/summary")
+    fetch(`/api/categories/summary?page=${page}`)
       .then((res) => res.json())
       .then((data) => {
         setCategories(data.data);
+        setMeta({
+          total: data.meta.total,
+          page: data.meta.page,
+          lastPage: data.meta.lastPage,
+        });
         setIsLoading(false);
       });
-  }, []);
+  }, [page]);
 
   if (isLoading) {
     return (
@@ -25,7 +39,7 @@ export default function AdminCategories() {
   }
 
   return (
-    <>
+    <div className="flex flex-col gap-3">
       <table className="border-collapse border border-gray-400 bg-white w-full text-center text-sm">
         <thead>
           <tr>
@@ -57,6 +71,7 @@ export default function AdminCategories() {
           ))}
         </tbody>
       </table>
-    </>
+      <Pagination page={page} lastPage={meta.lastPage} />
+    </div>
   );
 }

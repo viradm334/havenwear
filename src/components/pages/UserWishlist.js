@@ -5,21 +5,35 @@ import { useEffect, useState } from "react";
 import { formatCurrency } from "@/utils/formatCurrency";
 import Link from "next/link";
 import BackButton from "../ui/BackButton";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import Pagination from "../ui/Pagination";
 
 export default function UserWishlist({ user }) {
+  const searchParams = useSearchParams();
+  const page = parseInt(searchParams.get("page") || "1");
   const [wishlists, setWishlists] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [meta, setMeta] = useState({
+    total: 0,
+    page: 1,
+    lastPage: 1
+  })
 
   useEffect(() => {
     if (!user) return;
 
-    fetch(`/api/wishlist/${user.id}`)
+    fetch(`/api/wishlist/${user.id}?page=${page}`)
       .then((res) => res.json())
       .then((data) => {
         setWishlists(data.wishlist);
+        setMeta({
+          total: data.meta.total,
+          page: data.meta.page,
+          lastPage: data.meta.lastPage,
+        });
         setIsLoading(false);
       });
-  }, [user]);
+  }, [user, page]);
 
   if (isLoading) {
     return (
@@ -66,6 +80,7 @@ export default function UserWishlist({ user }) {
           </div>
         )}
       </div>
+      <Pagination page={page} lastPage={meta.lastPage}/>
     </div>
   );
 }

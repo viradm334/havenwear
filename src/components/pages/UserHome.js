@@ -6,25 +6,41 @@ import { formatCurrency } from "@/utils/formatCurrency";
 import Link from "next/link";
 import Carousel from "../ui/Carousel";
 import { InboxIcon } from "@heroicons/react/24/solid";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import Pagination from "../ui/Pagination";
 
 export default function UserHome() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const page = parseInt(searchParams.get("page") || "1");
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(searchParams.get("category") || "");
+  const [meta, setMeta] = useState({
+    total: 0,
+    page: 1,
+    lastPage: 1,
+  });
 
   useEffect(() => {
-    fetch("/api/products")
+    fetch(`/api/products?page=${page}&category=${selectedCategory}`)
       .then((res) => res.json())
       .then((prd) => {
         setProducts(prd.data);
+        setMeta({
+          total: prd.meta.total,
+          page: prd.meta.page,
+          lastPage: prd.meta.lastPage
+        });
         setIsLoading(false);
       })
       .catch((err) => {
         console.error("Failed to load products:", err.message);
         setIsLoading(false);
       });
-  }, []);
+  }, [page, selectedCategory]);
 
   useEffect(() => {
     fetch("/api/categories")
@@ -32,18 +48,24 @@ export default function UserHome() {
       .then((ctg) => setCategories(ctg.data));
   }, []);
 
-  const filterProductByCategory = async (slug) => {
-    setSelectedCategory(slug);
-    const res = await fetch(`/api/products?category=${slug}`);
-    const data = await res.json();
-    setProducts(data.data);
+  const handleChange = (slug) => {
+    const selectedCategory = slug;
+    setSelectedCategory(selectedCategory);
+
+    const params = new URLSearchParams(searchParams.toString());
+    if (selectedCategory) {
+      params.set("category", selectedCategory);
+      params.set("page", "1");
+    } else {
+      params.delete("category");
+    }
+
+    router.push(`${pathname}?${params.toString()}`);
   };
 
-  const clearFilter = async () => {
-    setSelectedCategory(null);
-    const res = await fetch(`/api/products`);
-    const data = await res.json();
-    setProducts(data.data);
+  const clearFilter = () => {
+    setSelectedCategory("");
+    router.push(pathname);
   };
 
   if (isLoading) {
@@ -69,7 +91,7 @@ export default function UserHome() {
                 className={`flex flex-col p-3 outline-1 ${
                   isSelected ? "outline-emerald-500" : "outline-gray-100"
                 } shadow-md rounded w-[120px] h-[160px] cursor-pointer`}
-                onClick={() => filterProductByCategory(ctg.slug)}
+                onClick={() => handleChange(ctg.slug)}
               >
                 <div className="relative w-[100px] h-[100px] overflow-hidden">
                   <Image
@@ -144,6 +166,7 @@ export default function UserHome() {
           </div>
         )}
       </div>
+      <Pagination page={page} lastPage={meta.lastPage}/>
     </div>
   );
 }

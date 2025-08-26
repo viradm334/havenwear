@@ -7,21 +7,38 @@ import Image from "next/image";
 import BackButton from "../ui/BackButton";
 import OrderStatusBadge from "../ui/OrderStatusBadge";
 import dayjs from "dayjs";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import Pagination from "../ui/Pagination";
 
 export default function UserComplaints({ user }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const page = parseInt(searchParams.get("page") || "1");
   const [complaints, setComplaints] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [status, setStatus] = useState(searchParams.get("status") || "");
+  const [meta, setMeta] = useState({
+    total: 0,
+    page: 1,
+    lastPage: 1,
+  });
 
   useEffect(() => {
     if (!user?.id) return;
 
-    fetch(`/api/complaint/my/${user.id}`)
+    fetch(`/api/complaint/my/${user.id}?page=${page}&status=${status}`)
       .then((res) => res.json())
       .then((data) => {
         setComplaints(data.complaints);
+        setMeta({
+          total: data.meta.total,
+          page: data.meta.page,
+          lastPage: data.meta.lastPage,
+        });
         setIsLoading(false);
       });
-  }, [user]);
+  }, [user, page, status]);
 
   const cancelComplaint = async (id) => {
     const confirmed = confirm("Anda yakin untuk membatalkan komplain?");
@@ -50,6 +67,26 @@ export default function UserComplaints({ user }) {
     }
   };
 
+  const handleChange = (e) => {
+    const selectedStatus = e.target.value;
+    setStatus(selectedStatus);
+
+    const params = new URLSearchParams(searchParams.toString());
+    if (selectedStatus) {
+      params.set("status", selectedStatus);
+      params.set("page", "1");
+    } else {
+      params.delete("status");
+    }
+
+    router.push(`${pathname}?${params.toString()}`);
+  };
+
+  const clearFilter = () => {
+    setStatus("");
+    router.push(pathname);
+  };
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -61,9 +98,46 @@ export default function UserComplaints({ user }) {
   return (
     <div className="flex flex-col p-3 items-center gap-4">
       <BackButton destination={"/"} />
+      <div className="flex gap-5">
+        <h4 className="text-gray-700 font-semibold">Status</h4>
+        <button
+          className="outline-1 outline-emerald-600 bg-white rounded text-emerald-600 px-3 py-1 cursor-pointer"
+          value={"OPEN"}
+          onClick={handleChange}
+        >
+          Open
+        </button>
+        <button
+          className="outline-1 outline-emerald-600 bg-white rounded text-emerald-600 px-3 py-1 cursor-pointer"
+          value={"REVIEWED"}
+          onClick={handleChange}
+        >
+          Reviewed
+        </button>
+        <button
+          className="outline-1 outline-emerald-600 bg-white rounded text-emerald-600 px-3 py-1 cursor-pointer"
+          value={"RESOLVED"}
+          onClick={handleChange}
+        >
+          Resolved
+        </button>
+        <button
+          className="outline-1 outline-emerald-600 bg-white rounded text-emerald-600 px-3 py-1 cursor-pointer"
+          value={"CANCELED"}
+          onClick={handleChange}
+        >
+          Canceled
+        </button>
+        <button
+          className=" text-emerald-600 font-semibold px-3 py-1 cursor-pointer"
+          onClick={clearFilter}
+        >
+          Clear Filters
+        </button>
+      </div>
       {complaints.map((complaint, index) => (
         <div
-          key={complaint.id}
+          key={index}
           className="w-3/4 border border-gray-300 rounded-lg p-4 bg-white shadow-md"
         >
           <div className="flex gap-3 px-2 mb-3">
@@ -145,6 +219,7 @@ export default function UserComplaints({ user }) {
           )}
         </div>
       ))}
+      <Pagination page={page} lastPage={meta.lastPage} />
     </div>
   );
 }
