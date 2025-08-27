@@ -57,7 +57,7 @@ npm install
 
 3. **Buat file .env dengan menyalin env.example**
 ```bash
-cp .env.exampe .env
+cp .env.example .env
 ```
 
 4. **Isi environment variable dengan kredensial sesuai dengan milik Anda**
