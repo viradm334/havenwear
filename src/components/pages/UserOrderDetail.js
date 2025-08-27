@@ -101,7 +101,7 @@ export default function UserOrderDetail({ orderNumber }) {
         )}
       </Modal>
       <div className="flex flex-col p-2">
-        <BackButton destination={'/user/orders'}/>
+        <BackButton destination={"/user/orders"} />
         <div className="flex gap-2 justify-evenly text-sm mb-3 rounded p-5">
           <div className="flex flex-col gap-2 w-1/3 text-sm mb-3 outline-1 bg-white rounded shadow-md outline-gray-200 p-5">
             <h4 className="text-md text-gray-800 font-semibold mb-3 text-center">
@@ -227,18 +227,31 @@ export default function UserOrderDetail({ orderNumber }) {
                 <h5 className="text-gray-800 font-medium text-sm">
                   Harga satuan: {formatCurrency(item.price)}
                 </h5>
-                <h5 className="text-gray-800 font-semibold text-end">
+                <h5 className="text-gray-800 font-semibold text-end mb-3">
                   Subtotal: {formatCurrency(item.price * item.quantity)}
                 </h5>
+                {order.status === "SENT" && (
+                  <div className="flex justify-end">
+                    <button
+                      className="px-6 py-1 rounded text-white bg-yellow-500 hover:bg-yellow-600 cursor-pointer"
+                      onClick={() => {
+                        setOrderItemId(item.id);
+                        setOrderItemName(item.productSize.product.name);
+                        setIsOpen(true);
+                      }}
+                    >
+                      Komplain Item
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           ))}
         </div>
-        <div className="flex px-5 justify-end">
-
-        <h1 className="font-bold text-emerald-700 mt-5 mb-3">
-          Total Price: {formatCurrency(order.totalPrice)}
-        </h1>
+        <div className="flex flex-col px-5 justify-end">
+          <h1 className="font-bold text-emerald-700 mt-5 mb-3">
+            Total Price: {formatCurrency(order.totalPrice)}
+          </h1>
         </div>
 
         <div className="flex gap-4 justify-center">
@@ -251,7 +264,7 @@ export default function UserOrderDetail({ orderNumber }) {
             </button>
           )}
           {order.status === "SENT" && (
-            <div>
+            <div className="flex gap-2">
               <button
                 className="px-6 py-1 rounded text-white bg-green-500 hover:bg-green-600 cursor-pointer"
                 onClick={finishOrder}
