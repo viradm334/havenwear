@@ -93,7 +93,7 @@ export default function LoginForm() {
         />
 
         <p className="mb-3 font-medium text-sm text-gray-500">
-          Don't have an account yet?
+          Don&apos;t have an account yet?
           <Link
             href={"/register"}
             className="font-medium text-sm text-emerald-600 underline ml-1"

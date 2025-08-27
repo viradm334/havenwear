@@ -18,7 +18,7 @@ export default function Footer() {
         <div className="flex flex-col md:w-1/3">
           <p className="font-bold text-sm mb-3">About Us</p>
           <p className="text-sm leading-relaxed">
-            Havenwear offers effortlessly stylish women's clothing with a
+            Havenwear offers effortlessly stylish women&apos;s clothing with a
             down-to-earth, casual vibe—comfortable pieces designed for everyday
             living, from cozy mornings to laid-back outings.
           </p>
