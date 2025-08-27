@@ -288,8 +288,6 @@ export default function EditProductForm() {
 
       <div className="flex flex-col gap-3">
         <h4 className="font-semibold text-gray-800">Product Images</h4>
-        {JSON.stringify(images)}
-        {JSON.stringify(deletedImages)}
         <div className="flex gap-3">
           {images.length > 0 &&
             images.map((item, index) => (

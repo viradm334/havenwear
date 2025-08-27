@@ -29,21 +29,29 @@ export default function ProductDetails({ user }) {
 
   useEffect(() => {
     fetch(`/api/products/${slug}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setProduct(data.product);
-        setSortedSizes(
-          data.product.productSizes.sort((a, b) => {
-            return (
-              sizeOrder.indexOf(a.name.toUpperCase()) -
-              sizeOrder.indexOf(b.name.toUpperCase())
-            );
-          })
-        );
-        if(data.product.productPhotos.length > 0){
-          setCurrentPhoto(data.product.productPhotos[0].imageUrl);
+      .then((res) => {
+        if (res.status === 404) {
+          router.push("/");
+          return;
         }
-        setIsLoading(false);
+        return res.json();
+      })
+      .then((data) => {
+        if (data) {
+          setProduct(data.product);
+          setSortedSizes(
+            data.product.productSizes.sort((a, b) => {
+              return (
+                sizeOrder.indexOf(a.name.toUpperCase()) -
+                sizeOrder.indexOf(b.name.toUpperCase())
+              );
+            })
+          );
+          if (data.product.productPhotos.length > 0) {
+            setCurrentPhoto(data.product.productPhotos[0].imageUrl);
+          }
+          setIsLoading(false);
+        }
       });
   }, [slug]);
 

@@ -12,7 +12,7 @@ export async function GET(req) {
     const skip = (page - 1) * limit;
 
     // where clause
-    const whereClause = {status: "PUBLISHED"};
+    const whereClause = {status: "PUBLISHED", deleted_at: null};
     if(categorySlug) whereClause.category = {
       slug: categorySlug
     };

@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { NextResponse } from "next/server";
 
 export async function GET(req, {params}){
     try{
@@ -29,7 +30,7 @@ export async function GET(req, {params}){
             },
           });
 
-          if(!product){
+          if(!product || product.deleted_at){
             return Response.json({message: "Product not found!"}, {status: 404});
           }
 

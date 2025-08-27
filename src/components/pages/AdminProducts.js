@@ -74,6 +74,28 @@ export default function AdminProducts() {
     setCategory("");
   };
 
+  const handleDelete = async(id) => {
+    const confirmed = confirm('Anda yakin untuk menghapus produk?');
+
+    if(!confirmed) return;
+
+    try{
+      const res = await fetch(`/api/products/delete/${id}`, {
+        method: 'PATCH'
+      });
+
+      if(res.ok){
+        const data = await res.json();
+        setProducts((prev) =>
+          prev.filter((item) => item.id !== id)
+        );
+        console.log(data.message);
+      }
+    }catch(err){
+      console.error(err.message);
+    }
+  }
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -191,12 +213,17 @@ export default function AdminProducts() {
               </td>
               <td className="border border-gray-300 p-2">{product.status}</td>
               <td className="border border-gray-300 p-2">
+                <div className="flex gap-2 justify-center">
                 <Link
                   href={`/admin/product/edit/${product.slug}`}
                   className="outline-none bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md"
                 >
                   Edit
                 </Link>
+              <button className="outline-none bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-md" onClick={() => handleDelete(product.id)}>
+                  Delete
+              </button>
+                </div>
               </td>
             </tr>
           ))}
