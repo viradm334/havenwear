@@ -6,10 +6,10 @@ import { Suspense } from "react";
 
 export default function AdminProductsPage() {
   return (
-    <AdminLayout title="Products">
-      <Suspense>
+    <Suspense>
+      <AdminLayout title="Products">
         <AdminProducts />
-      </Suspense>
-    </AdminLayout>
+      </AdminLayout>
+    </Suspense>
   );
 }

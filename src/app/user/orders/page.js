@@ -6,10 +6,10 @@ import { Suspense } from "react";
 
 export default function UserOrderspage() {
   return (
-    <UserLayout title="My Orders">
-      <Suspense>
+    <Suspense>
+      <UserLayout title="My Orders">
         <UserOrders />
-      </Suspense>
-    </UserLayout>
+      </UserLayout>
+    </Suspense>
   );
 }

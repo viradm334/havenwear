@@ -6,10 +6,10 @@ import { Suspense } from "react";
 
 export default function UserWishlistPage() {
   return (
-    <UserLayout title="Wishlist">
-      <Suspense>
+    <Suspense>
+      <UserLayout title="Wishlist">
         <UserWishlist />
-      </Suspense>
-    </UserLayout>
+      </UserLayout>
+    </Suspense>
   );
 }

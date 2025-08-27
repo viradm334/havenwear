@@ -6,10 +6,10 @@ import { Suspense } from "react";
 
 export default function AdminComplaintPage() {
   return (
-    <AdminLayout title="Complaints">
-      <Suspense>
+    <Suspense>
+      <AdminLayout title="Complaints">
         <AdminComplaint />
-      </Suspense>
-    </AdminLayout>
+      </AdminLayout>
+    </Suspense>
   );
 }

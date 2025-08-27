@@ -6,10 +6,10 @@ import { Suspense } from "react";
 
 export default function UserComplaintsPage() {
   return (
-    <UserLayout title="My Complaints">
-      <Suspense>
+    <Suspense>
+      <UserLayout title="My Complaints">
         <UserComplaints />
-      </Suspense>
-    </UserLayout>
+      </UserLayout>
+    </Suspense>
   );
 }

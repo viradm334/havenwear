@@ -4,10 +4,10 @@ import { Suspense } from "react";
 
 export default function ResetPasswordPage() {
   return (
-    <AuthLayout>
-      <Suspense>
+    <Suspense>
+      <AuthLayout>
         <ResetPasswordForm />
-      </Suspense>
-    </AuthLayout>
+      </AuthLayout>
+    </Suspense>
   );
 }

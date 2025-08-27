@@ -4,10 +4,10 @@ import { Suspense } from "react";
 
 export default function AdminOrdersPage() {
   return (
-    <AdminLayout title="Orders">
-      <Suspense>
+    <Suspense>
+      <AdminLayout title="Orders">
         <AdminOrders />
-      </Suspense>
-    </AdminLayout>
+      </AdminLayout>
+    </Suspense>
   );
 }
