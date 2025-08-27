@@ -162,6 +162,7 @@ model OrderItem {
   quantity Int
   price Float
   complaints Complaint[]
+  complained_at DateTime?
 }
 
 model Wishlist {

@@ -230,7 +230,14 @@ export default function UserOrderDetail({ orderNumber }) {
                 <h5 className="text-gray-800 font-semibold text-end mb-3">
                   Subtotal: {formatCurrency(item.price * item.quantity)}
                 </h5>
-                {order.status === "SENT" && (
+                {item.complained_at && (
+                  <h5 className="text-gray-800 font-light text-end text-sm mb-3">
+                    Dikomplain pada:
+                    {dayjs(item.complained_at).format("DD-MM-YYYY  HH:mm")}
+                  </h5>
+                )}
+
+                {order.status === "SENT" && item.complained_at === null && (
                   <div className="flex justify-end">
                     <button
                       className="px-6 py-1 rounded text-white bg-yellow-500 hover:bg-yellow-600 cursor-pointer"

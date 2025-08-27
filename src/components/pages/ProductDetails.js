@@ -6,6 +6,7 @@ import Image from "next/image";
 import { HeartIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 import { formatCurrency } from "@/utils/formatCurrency";
+import BackButton from "../ui/BackButton";
 
 export default function ProductDetails({ user }) {
   const [quantity, setQuantity] = useState(1);
@@ -175,7 +176,8 @@ export default function ProductDetails({ user }) {
   }
 
   return (
-    <>
+    <div className="flex flex-col gap-2">
+      <BackButton destination={'/'}/>
       <div className="main w-full flex justify-center items-center">
         <div className="max-w-6xl w-full p-5 flex flex-col md:flex-row gap-8">
           {/* Product Image */}
@@ -308,6 +310,6 @@ export default function ProductDetails({ user }) {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

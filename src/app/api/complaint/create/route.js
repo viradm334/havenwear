@@ -5,13 +5,21 @@ export async function POST(req){
         const body = await req.json();
         const {userId, orderItemId, message} = body;
 
-        const complaint = await prisma.complaint.create({
-            data: {
+        const [complaint, updatedOrderItem] = await prisma.$transaction([
+            prisma.complaint.create({
+              data: {
                 userId,
                 orderItemId,
-                message
-            }
-        });
+                message,
+              },
+            }),
+            prisma.orderItem.update({
+              where: { id: orderItemId },
+              data: {
+                complained_at: new Date(),
+              },
+            }),
+          ]);
 
         return Response.json({message: "Successfully filed complaint!", complaint, success: true});
     }catch(err){
