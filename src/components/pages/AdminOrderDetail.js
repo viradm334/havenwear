@@ -62,6 +62,30 @@ export default function AdminOrderDetail() {
     }
   };
 
+  const rejectPayment = async () => {
+    try {
+      const confirmed = confirm("Anda yakin untuk menolak pembayaran?");
+
+      if (!confirmed) {
+        return;
+      } else {
+        const res = await fetch(`/api/pay/reject/${order.orderNumber}`, {
+          method: "PATCH",
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          alert(data.message);
+          window.location.reload();
+        } 
+      }
+    } catch (err) {
+      console.error(err.message);
+      alert(err.message);
+    }
+  };
+
   return (
     <>
       <Modal
@@ -176,14 +200,20 @@ export default function AdminOrderDetail() {
           Total Price: {formatCurrency(order.totalPrice)}
         </h1>
 
-        <div className="flex gap-4">
-          {order.paid_at && !order.payment_confirmed_at && (
+          {order.paid_at && !order.payment_confirmed_at && !order.rejected_at && (<div className="flex gap-4">
             <button
               className="px-6 py-1 rounded text-white bg-yellow-500 hover:bg-yellow-600 cursor-pointer"
               onClick={confirmPayment}
             >
-              Konfirmasi Pembayaran
+              Setujui Pembayaran
             </button>
+            <button
+              className="px-6 py-1 rounded text-white bg-red-500 hover:bg-red-600 cursor-pointer"
+              onClick={rejectPayment}
+            >
+              Tolak Pembayaran
+            </button>
+          </div>
           )}
           {order.status === "PROCESSED" && (
             <button
@@ -193,7 +223,6 @@ export default function AdminOrderDetail() {
               Kirim Barang
             </button>
           )}
-        </div>
       </div>
     </>
   );

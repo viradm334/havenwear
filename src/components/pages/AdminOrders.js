@@ -103,7 +103,7 @@ export default function AdminOrders() {
         </div>
       </div>
 
-      <div className="px-3 mb-3">
+      <div className="mb-3">
         <form className="flex items-end gap-5">
           <div className="flex flex-col gap-1 w-1/4">
             <label className="text-sm">Order Status</label>
@@ -119,6 +119,7 @@ export default function AdminOrders() {
               <option value="SENT">Sent</option>
               <option value="FINISHED">Finished</option>
               <option value="CANCELED">Canceled</option>
+              <option value="REJECTED">Rejected</option>
             </select>
           </div>
 
@@ -133,6 +134,7 @@ export default function AdminOrders() {
               <option value="">Select status</option>
               <option value="PAID">Paid</option>
               <option value="UNPAID">Unpaid</option>
+              <option value="REJECTED">Rejected</option>
             </select>
           </div>
         </form>

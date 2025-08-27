@@ -67,7 +67,7 @@ export default function AdminComplaint() {
       <div className="mb-3">
         <form className="flex items-end gap-5">
           <div className="flex flex-col gap-1 w-1/4">
-            <label>Order Status</label>
+            <label>Complaint Status</label>
             <select
               className="outline-1 outline-gray-300 rounded-sm p-1.5 focus:outline-emerald-600"
               name="status"

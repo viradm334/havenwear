@@ -188,6 +188,7 @@ enum Status {
   COMPLAINED
   FINISHED
   CANCELED
+  REJECTED
 }
 
 enum PaymentStatus {

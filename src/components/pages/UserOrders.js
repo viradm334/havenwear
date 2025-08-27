@@ -131,6 +131,13 @@ export default function UserOrders({ user }) {
           Canceled
         </button>
         <button
+          className="outline-1 outline-emerald-600 bg-white rounded text-emerald-600 px-3 py-1 cursor-pointer"
+          value={"REJECTED"}
+          onClick={handleChange}
+        >
+          Rejected
+        </button>
+        <button
           className=" text-emerald-600 font-semibold px-3 py-1 cursor-pointer"
           onClick={clearFilter}
         >
