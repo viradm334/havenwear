@@ -42,8 +42,8 @@ export async function GET(req) {
 
     const rawResults =
       await prisma.$queryRaw`SELECT DATE(created_at) AS orderDate, COUNT(*) as totalOrders
-        FROM \`order\`  WHERE created_at >= CURDATE() - INTERVAL 7 DAY
-        GROUP BY DATE(created_at);
+        FROM \`order\` o  WHERE o.created_at >= CURDATE() - INTERVAL 7 DAY
+        GROUP BY DATE(o.created_at);
         `;
 
     const chartData = last7Days.map((date) => {
