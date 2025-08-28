@@ -93,7 +93,8 @@ export default function AdminOrderDetail() {
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
       >
-        <InputResiForm orderNumber={orderNumber} />
+        <InputResiForm orderNumber={orderNumber} onSuccess={() => setIsOpen(false)}
+ />
       </Modal>
       <BackButton destination={"/admin/orders"} />
       <div className="flex flex-col p-5 gap-2 text-sm">
@@ -215,13 +216,15 @@ export default function AdminOrderDetail() {
             </button>
           </div>
           )}
-          {order.status === "PROCESSED" && (
+          {order.status === "PROCESSED" && (<div className="flex">
+
             <button
               className="px-6 py-1 rounded text-white bg-green-500 hover:bg-green-600 cursor-pointer"
               onClick={() => setIsOpen(true)}
             >
               Kirim Barang
             </button>
+          </div>
           )}
       </div>
     </>

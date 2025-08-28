@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function InputResiForm({orderNumber}) {
+export default function InputResiForm({orderNumber, onSuccess}) {
   const [formData, setFormData] = useState({
     no_resi: "",
   });
@@ -23,9 +23,8 @@ export default function InputResiForm({orderNumber}) {
 
         if(res.ok){
             alert(data.message);
-        }else{
-            console.error(data.message);
-            alert(data.message);
+            if (onSuccess) onSuccess();
+            window.location.reload();
         }
     }catch(err){
         console.error(err.message);

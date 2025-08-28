@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function ComplaintForm({ orderItemId, orderItemName, userId }) {
+export default function ComplaintForm({ orderItemId, orderItemName, userId, onSuccess }) {
   const [formData, setFormData] = useState({
     orderItemId: "",
     message: "",
@@ -27,9 +27,9 @@ export default function ComplaintForm({ orderItemId, orderItemName, userId }) {
 
       if (res.ok) {
         alert(data.message);
-      } else {
-        console.error(data.message);
-      }
+        if (onSuccess) onSuccess();
+        window.location.reload();
+      } 
     } catch (err) {
       console.error(err.message);
       alert(err.message);

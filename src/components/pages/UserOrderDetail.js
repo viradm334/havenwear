@@ -97,6 +97,7 @@ export default function UserOrderDetail({ orderNumber }) {
             orderItemId={orderItemId}
             orderItemName={orderItemName}
             userId={order.userId}
+            onSuccess={() => setIsOpen(false)}
           />
         )}
       </Modal>

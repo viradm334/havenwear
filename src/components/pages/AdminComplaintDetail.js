@@ -41,7 +41,7 @@ export default function AdminComplaintDetail() {
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
       >
-        <AdminComplaintForm complaintId={complaint.id} />
+        <AdminComplaintForm complaintId={complaint.id} onSuccess={() => setIsOpen(false)} />
       </Modal>
       <BackButton destination={"/admin/complaints"} />
       <div className="flex flex-col p-5 text-sm gap-2">

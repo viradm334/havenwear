@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 
-export default function AdminComplaintForm({complaintId}){
+export default function AdminComplaintForm({complaintId, onSuccess}){
     const [formData, setFormData] = useState({
         adminMessage: ''
     });
@@ -24,8 +24,8 @@ export default function AdminComplaintForm({complaintId}){
     
           if (res.ok) {
             alert(data.message);
-          } else {
-            console.error(data.message);
+            if (onSuccess) onSuccess();
+            window.location.reload();
           }
         } catch (err) {
           console.error(err.message);
