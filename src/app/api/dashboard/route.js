@@ -42,7 +42,7 @@ export async function GET(req) {
 
     const rawResults =
       await prisma.$queryRaw`SELECT DATE(created_at) AS orderDate, COUNT(*) as totalOrders
-        FROM \`order\` o  WHERE o.created_at >= CURDATE() - INTERVAL 7 DAY
+        FROM \`Order\` o  WHERE o.created_at >= CURDATE() - INTERVAL 7 DAY
         GROUP BY DATE(o.created_at);
         `;
 
@@ -60,7 +60,7 @@ export async function GET(req) {
 
     const rawMostProductsSold =
       await prisma.$queryRaw`SELECT p.name, SUM(i.quantity) AS totalProductsSold
-  FROM \`order\` o
+  FROM \`Order\` o
   JOIN orderItem i ON o.id = i.orderId
   JOIN productSize s ON i.productSizeId = s.id
   JOIN product p ON p.id = s.productId
