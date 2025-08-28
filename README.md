@@ -72,7 +72,7 @@ npx prisma generate
 npx prisma migrate deploy
 ```
 
-7. **Jalankan Aplikasi""
+7. **Jalankan Aplikasi**
 ```bash
 npm run dev
 ```
