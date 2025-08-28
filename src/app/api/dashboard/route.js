@@ -61,9 +61,9 @@ export async function GET(req) {
     const rawMostProductsSold =
       await prisma.$queryRaw`SELECT p.name, SUM(i.quantity) AS totalProductsSold
   FROM \`Order\` o
-  JOIN orderItem i ON o.id = i.orderId
-  JOIN productSize s ON i.productSizeId = s.id
-  JOIN product p ON p.id = s.productId
+  JOIN OrderItem i ON o.id = i.orderId
+  JOIN ProductSize s ON i.productSizeId = s.id
+  JOIN Product p ON p.id = s.productId
   GROUP BY p.name
   ORDER BY totalProductsSold DESC
   LIMIT 3;`;
